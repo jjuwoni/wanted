@@ -5,4 +5,46 @@
         from courses
     </query>
 
+    <query key="course.save">
+        insert into courses (author_id, title, description, status)
+        values (?, ?, ?, ?)
+    </query>
+
+    <query key="course.delete">
+        delete
+        from courses
+        where course_id = ?
+    </query>
+
+    <query key="course.findById">
+        select *
+        from courses
+        where course_id = ?
+    </query>
+
+    <query key="course.findCourseWithSections">
+        select
+            c.course_id,
+            c.author_id,
+            c.title,
+            c.description,
+            c.status,
+            s.section_id,
+            s.course_id AS section_course_id,
+            s.title AS section_title,
+            s.section_order
+        from courses c
+        left join course_sections s
+        on c.course_id = s.course_id
+        where c.course_id = ?
+        order by s.section_order ASC
+    </query>
+
+    <query key="courseSection.save">
+        insert into course_sections
+        (course_id, title, section_order)
+        values
+        (?, ?, ?)
+    </query>
+
 </properties>
