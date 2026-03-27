@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <h1>쿠키와 세션 테스트!!</h1>
+  <hr>
+  <h2>쿠키 테스트</h2>
+  <form action="/cookie" method="post">
+      <lable>쿠키 값 : <input type="text" name="cookieValue" placeholder="값 입력해주세요..."></lable>
+      <br>
+      <button type="submit">쿠키에 값 넣기</button>
+  </form>
+  <hr>
+  <h2>세션 테스트</h2>
+  <form action="/session" method="post">
+      <lable>사용자 id : <input type="text" name="userId" placeholder="값 입력해주세요..."></lable>
+      <br>
+      <lable>비밀번호 : <input type="password" name="pwd"></lable>
+      <button type="submit">로그인</button>
+  </form>
+  <p><a href="/session">세션 확인</a></p>
+</body>
+</html>
