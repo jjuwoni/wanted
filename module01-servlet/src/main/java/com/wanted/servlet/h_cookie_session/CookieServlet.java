@@ -42,7 +42,7 @@ public class CookieServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html; charset=UTF-8");
+//        resp.setContentType("text/html; charset=UTF-8");
         String savedValue = "없음";
 
         Cookie[] cookies = req.getCookies();

@@ -30,11 +30,11 @@ public class SessionServlet extends HttpServlet {
 
         if(session != null) {
             loggedInUser = session.getAttribute("loggedInUser").toString();
-            pwd = session.getAttribute("pwd").toString();
+            pwd = session.getAttribute("userPwd").toString();
         }
 
         // jsp 에서 사용하는 값 담아주기
-        req.setAttribute("loggedInUSer", loggedInUser != null ? loggedInUser : "로그인 안 됨!!");
+        req.setAttribute("loggedInUser", loggedInUser != null ? loggedInUser : "로그인 안 됨!!");
         req.setAttribute("pwd", pwd != null ? pwd : "비밀번호 없음...");
 
         RequestDispatcher rd = req.getRequestDispatcher("/h_cookie_session/session-result.jsp");
@@ -45,8 +45,33 @@ public class SessionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
 
+        // 로그인 버튼을 눌렀을 때
+        // ID, PWD 값을 request 객체에서 꺼내 담기
         String userId = req.getParameter("userId");
-        String userPwd = req.getParameter("userPwd");
+        String userPwd = req.getParameter("pwd");
+
+        if(userId != null && !userPwd.isEmpty()) {
+            // 사용자의 아이디와 비밀번호를 저장하기 위한 Session 객체 생성
+            HttpSession session = req.getSession(true);
+            // 동일한 사용자인지를 확인하기 위한 변수 생성.
+            String existUser = (String)session.getAttribute("loggedInUser");
+
+            if(existUser == null || existUser.equals(userId)) {
+                session.setAttribute("loggedInUser", userId);
+                if(userPwd != null && !userPwd.isEmpty()) {
+                    session.setAttribute("userPwd", userPwd);
+                }
+                session.setMaxInactiveInterval(30); // session 의 유효 기간 설정 30초
+            } else {
+                session.setAttribute("loggedInUser", userId);
+                if(userPwd != null && !userPwd.isEmpty()) {
+                    session.setAttribute("userPwd", userPwd);
+                }
+                session.setMaxInactiveInterval(30); // session 의 유효 기간 설정 30초
+            }
+        }
+
+        doGet(req, resp);
 
     }
 }

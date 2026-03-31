@@ -13,4 +13,17 @@
         <error-code>500</error-code>
         <location>/showerrorpage</location>
     </error-page>
+
+    <filter>
+        <filter-name>encoding</filter-name>
+        <filter-class>com.wanted.servlet.i_filter.EncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding-type</param-name>
+            <param-value>text/html; charset=UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

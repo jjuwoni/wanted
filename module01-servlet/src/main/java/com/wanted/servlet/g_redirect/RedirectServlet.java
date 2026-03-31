@@ -30,7 +30,7 @@ public class RedirectServlet extends HttpServlet {
                 .append("</body>\n")
                 .append("</html>\n");
 
-        resp.setContentType("text/html; charset=UTF-8");
+//        resp.setContentType("text/html; charset=UTF-8");
 
         PrintWriter out = resp.getWriter();
 
