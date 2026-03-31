@@ -229,6 +229,44 @@ public class LoopPractice {
                 break;
         }
     }
+
+    public void practice13() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("문자열 : ");
+        String str = sc.nextLine();
+        System.out.print("찾고자하는 문자 : ");
+        char cr = sc.next().charAt(0);
+
+        int count = 0;
+
+        for(int i = 0; i < str.length(); i++) {
+            if(str.charAt(i) == cr) {
+                count++;
+            }
+        }
+        System.out.print("포함된 갯수 : " + count);
+
+    }
+
+    public void practice14() {
+        int money = 0;
+        int i;
+        for(i=1; money<10000; i++) {
+            money += 70;
+            System.out.println(i + "회 모금액 : " + money + "원");
+        }
+
+        System.out.println("총 모금횟수 : " + (i-1) + "회");
+
+//        int money=0;
+//        int i=0;
+//        while(money<10000){
+//            i += 1;
+//            money += 70;
+//            System.out.println(i + "회 모금액 : " + money + "원");
+//        }
+//        System.out.println("총 모금횟수 : " + i + "회");
+    }
 }
 
 
