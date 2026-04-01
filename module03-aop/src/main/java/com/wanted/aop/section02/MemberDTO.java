@@ -1,4 +1,4 @@
-package com.wanted.aop.section01.problem;
+package com.wanted.aop.section02;
 
 import lombok.*;
 

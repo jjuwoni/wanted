@@ -16,7 +16,15 @@ dependencies {
     // Spring 프레임워크의 핵심 의존성
     implementation("org.springframework:spring-context:5.3.39")
     // Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
-    implementation("org.projectlombok:lombok:1.16.20")
+    implementation("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    // Source: https://mvnrepository.com/artifact/org.springframework/spring-aop
+    implementation("org.springframework:spring-aop:5.3.39")
+    // Source: https://mvnrepository.com/artifact/org.aspectj/aspectjrt
+    implementation("org.aspectj:aspectjrt:1.9.24")
+    // Source: https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
+    implementation("org.aspectj:aspectjweaver:1.9.24")
 }
 
 test {
