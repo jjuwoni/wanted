@@ -1,0 +1,16 @@
+package com.wanted.container.section03.gateway;
+
+public class KaKaoPayGateway implements PaymentInterface {
+
+    /*
+     * 결제를 담당하는 메서드
+     * @param orderId 주문 ID
+     * @param amount 결제 금액
+     * @return 결제 성공여부
+     * */
+    @Override
+    public boolean processPayment(String orderId, double amount) {
+        System.out.println("카카오페이로 결제 진행 시작 : 주문ID = " + orderId + ", 금액 = " + amount);
+        return true;
+    }
+}
