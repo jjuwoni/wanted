@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>메인 페이지 입니다!!</h1>
+    <h3>정적인 화면이 아닌 동적인 화면이 가장 먼저 뜹니다!</h3>
+    <hr>
+    <h3>문자열로 뷰 이름 반환하기</h3>
+    <button onclick="location.href='string'">문자열로 뷰 반환</button>
+    <hr>
+    <h3>문자열로 redirect 하기</h3>
+    <button onclick="location.href='string-redirect'">문자열로 뷰 반환하면서 redirect</button>
+    <hr>
+    <h3>문자열로 redirect 하면서 값을 유지하기!</h3>
+    <button onclick="location.href='string-redirect-attr'">문자열로 뷰 반환하면서 redirect && flashAttribute</button>
+
+    <h1 th:text="${flashMessage}"></h1>
+
+    <h3>ModelAndView 객체로 뷰이름 지정해서 반환하기</h3>
+    <button onclick="location.href='modelAndView'">ModelAndView 객체로 뷰 이름 지정해서 반환</button>
+</body>
+</html>

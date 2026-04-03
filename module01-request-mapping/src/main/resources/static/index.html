@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 align="center">Spring Web MVC Request-Mapping</h1>
+    <hr>
+    <h2>1. 메소드에 요청 매핑하기!!</h2>
+    <h3>GET 방식의 요청 : /menu/regist</h3>
+    <button onclick="location.href='/menu/regist'">GET 메뉴 등록 요청함!!</button>
+    <hr>
+    <h3>POST 방식의 요청 : /menu/regist</h3>
+    <form action="/menu/regist" method="post">
+        <button type="submit">POST 메뉴 등록 요청함!!</button>
+    </form>
+    <hr>
+    <h3>GET 방식의 요청 : /menu/modify</h3>
+    <form action="/menu/modify" method="get">
+        <button type="submit">GET 메뉴 수정 요청함!!</button>
+    </form>
+    <hr>
+    <h3>POST 방식의 요청 : /menu/modify</h3>
+    <form action="/menu/modify" method="post">
+        <button type="submit">POST 메뉴 수정 요청함!!</button>
+    </form>
+    <hr>
+    <h2>2. 클래스에 요청 매핑하기!!</h2>
+    <h3>GET 방식의 요청 : /order/regist</h3>
+    <button onclick="location.href='/order/regist'">GET 주문 등록 요청함!!</button>
+    <hr>
+    <h3>POST 방식의 요청 : /order/regist</h3>
+    <form action="/order/regist" method="post">
+        <button type="submit">POST 주문 등록 요청함!!</button>
+    </form>
+    <hr>
+    <h3>GET 방식의 요청 : /order/modify</h3>
+    <form action="/order/modify" method="get">
+        <button type="submit">GET 주문 수정 요청함!!</button>
+    </form>
+    <hr>
+    <h3>POST 방식의 요청 : /order/modify</h3>
+    <form action="/order/modify" method="post">
+        <button type="submit">POST 주문 수정 요청함!!</button>
+    </form>
+    <hr>
+    <h3>POST 방식의 요청 : /order/delete</h3>
+    <form action="/order/delete" method="post">
+        <button type="submit">POST 주문 삭제 요청함!!</button>
+    </form>
+    <hr>
+    <h3>GET 방식의 요청 : /order/detail/{orderNO}</h3>
+    <form action="/order/detail/3" method="get">
+        <button type="submit">GET 방식의 3번 주문 상세 요청함!!</button>
+    </form>
+
+
+</body>
+</html>
