@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <h1>파일 업로드 하기</h1>
+  <pre>
+    module06 에서 진행하는 파일관련 처리는 추후에는 권장하지 않는 방식이다.
+    다만, 현재 우리의 기술 스택 관련에서는 최선의 방식이니 아ㅣ 부분만 알고 넘어가자!!
+  </pre>
+  <hr>
+  <h3>single-file 업로드하기(단일파일)</h3>
+  <form action="single-file" method="post" enctype="multipart/form-data">
+<!--
+    encoding 을 보내줄 때 맞춰주어야 spring 에서도 알맞은 타입으로 전달 받을 수 있다.
+-->
+    파일 : <input type="file" name="singleFile"> <br>
+    파일 설명 : <input type="text" name="description"><br>
+    <input type="submit">
+  </form>
+
+  <hr>
+  <h3>multi-file 업로드하기(다중파일)</h3>
+  <form action="multi-file" method="post" enctype="multipart/form-data">
+      <!--
+          encoding 을 보내줄 때 맞춰주어야 spring 에서도 알맞은 타입으로 전달 받을 수 있다.
+      -->
+      파일 : <input type="file" name="multiFile" multiple> <br>
+      파일 설명 : <input type="text" name="description"><br>
+      <input type="submit">
+  </form>
+</body>
+</html>
