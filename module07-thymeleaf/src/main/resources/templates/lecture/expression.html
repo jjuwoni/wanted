@@ -58,10 +58,13 @@
     <h2>표현식2 - 메시지 표현식 #{...}</h2>
     <!-- resources 폴더 하위에 messages.properties라는 외부 리소스를 만들어 읽어오자.(다른 곳에 다른 이름으로 작성하면 안됨)-->
     <p th:text="#{ message.value }"></p>
+    <p th:text="#{ message.value2 }"></p>
 
     <h2>표현식3 - 링크 표현식 @{...}</h2>
     <!-- 위쪽에 css를 불러오는 link태그를 링크식을 사용하여 작성해보자. -->
     <a th:href="@{/}">메인으로</a>
+    <br>
+    <a th:href="@{https://www.youtube.com/}">youtube</a>
 
     <h2>표현식4 - 선택 변수 표현식 *{...}</h2>
     <p th:text="${ member.name }"></p>
@@ -100,6 +103,8 @@
     <p>
     <ul>
         <li th:inline="text">[[${ hello }]]</li>
+        <li>[[${ hello }]]</li>
+        <li th:inline="text">[(${ hello })]</li>
         <li>[(${ hello })]</li>
         <li th:inline="none">[[${ hello }]]</li>
         <li th:inline="none">[(${ hello })]</li>
@@ -120,8 +125,8 @@
 
             /* 정적 페이지와 동적 페이지 모두 문제가 생기지는 않는다. */
             let hello = '[[${ hello }]]';
-
             alert(hello);
+            // alert(`[[${hello}]]`); -> 이것만 써도 됨.
         }
     </script>
 
