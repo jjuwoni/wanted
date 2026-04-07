@@ -21,9 +21,9 @@ public class Machine {
             if(this.water>=100 && this.bean>=20 && this.washCount <3) {
                 System.out.println("----------커피를 내립니다.");
                 this.water -= 100;
-                System.out.println("-----남은 물 : " + (this.water - 100) + "ml");
+                System.out.println("-----남은 물 : " + (this.water) + "ml");
                 this.bean -= 20;
-                System.out.println("-----남은 원두 : " + (this.bean - 20) + "ml");
+                System.out.println("-----남은 원두 : " + (this.bean) + "ml");
                 this.washCount++;
             } else if(this.water<100 || this.bean<20) {
                 System.out.println("----------재료가 부족합니다. 재료를 채워주세요.");

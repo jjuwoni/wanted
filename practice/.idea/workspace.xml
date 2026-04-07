@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7561a060-22a9-494c-b5fb-2244556aa302" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/module02/practice/controller/LoopPractice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/module02/practice/controller/LoopPractice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/module02/practice/run/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/module02/practice/run/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ex/coffee/Machine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ex/coffee/Machine.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,12 +30,12 @@
     &quot;assignee&quot;: &quot;jjuwoni&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/jjuwoni/wanted.git",
-    "accountId": "93331413-e4b3-421c-8df0-b4689007f977"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jjuwoni/wanted.git&quot;,
+    &quot;accountId&quot;: &quot;93331413-e4b3-421c-8df0-b4689007f977&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -47,35 +46,35 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Application.executor": "Run",
-    "Application.ConditionPractice.executor": "Run",
-    "Application.PracApplication.executor": "Run",
-    "Application.PracApplication1.executor": "Run",
-    "Application.PracApplication2.executor": "Run",
-    "Application.PracApplication3.executor": "Run",
-    "Application.PracApplication4.executor": "Run",
-    "Application.PracApplication5.executor": "Run",
-    "Application.PracApplication6.executor": "Run",
-    "Application.PracApplication7.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Java",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Lecture/Java_Practice/practice",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Lecture/01_java/practice/src/Main.java",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ConditionPractice.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PracApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PracApplication1.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PracApplication2.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PracApplication3.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PracApplication4.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PracApplication5.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PracApplication6.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PracApplication7.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Java&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Lecture/Java_Practice/practice&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Lecture/01_java/practice/src/Main.java&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Lecture\01_java\practice\src\com\ex" />
@@ -100,7 +99,8 @@
       <workItem from="1773063721437" duration="1902000" />
       <workItem from="1773152185188" duration="2905000" />
       <workItem from="1773234086978" duration="4297000" />
-      <workItem from="1774959731877" duration="7282000" />
+      <workItem from="1774959731877" duration="7453000" />
+      <workItem from="1775574324001" duration="1292000" />
     </task>
     <servers />
   </component>
