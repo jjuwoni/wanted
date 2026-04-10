@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Query Method</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(180deg, #140000 0%, #2b0808 45%, #4a1414 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff4e8;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            margin: 20px;
+            padding: 42px 34px;
+            border-radius: 28px;
+            background: linear-gradient(180deg, rgba(35, 0, 0, 0.95), rgba(75, 10, 10, 0.96));
+            border: 2px solid rgba(255, 120, 60, 0.35);
+            box-shadow:
+                    0 0 25px rgba(255, 70, 0, 0.18),
+                    0 0 60px rgba(120, 0, 0, 0.35),
+                    0 18px 40px rgba(0, 0, 0, 0.45);
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 14px;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffb347;
+            text-shadow:
+                    0 0 8px rgba(255, 120, 0, 0.55),
+                    0 0 18px rgba(255, 60, 0, 0.35);
+        }
+
+        h3 {
+            margin: 0 0 28px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #ffd7b3;
+        }
+
+        .form-box {
+            padding: 28px 24px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 0 1px rgba(255, 180, 120, 0.14);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            max-width: 320px;
+            padding: 14px 16px;
+            border: 2px solid rgba(255, 160, 100, 0.35);
+            border-radius: 14px;
+            background: rgba(255, 248, 240, 0.95);
+            font-size: 1rem;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: #ff8c42;
+            box-shadow: 0 0 12px rgba(255, 120, 60, 0.28);
+        }
+
+        .form-text {
+            font-size: 1rem;
+            color: #ffe2c2;
+            font-weight: 600;
+        }
+
+        input[type="submit"] {
+            border: none;
+            border-radius: 16px;
+            padding: 14px 26px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff8f0;
+            background: linear-gradient(135deg, #7a0c0c, #c62828 55%, #ff6f00);
+            box-shadow:
+                    0 8px 18px rgba(0, 0, 0, 0.28),
+                    inset 0 1px 0 rgba(255, 220, 180, 0.18);
+            transition: all 0.22s ease;
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow:
+                    0 12px 24px rgba(0, 0, 0, 0.35),
+                    0 0 16px rgba(255, 90, 0, 0.35);
+            background: linear-gradient(135deg, #921111, #e53935 55%, #ff8f00);
+        }
+
+        .guide {
+            margin-top: 18px;
+            font-size: 0.92rem;
+            color: #ffcfaa;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            h3 {
+                font-size: 0.95rem;
+            }
+
+            input[type="number"] {
+                font-size: 0.95rem;
+            }
+
+            input[type="submit"] {
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>😈 JPA Query Method 😈</h1>
+    <h3>입력한 가격을 초과하는 메뉴를 지옥의 장부에서 찾아보자 🔥</h3>
+
+    <div class="form-box">
+        <form action="/menu/search" method="get">
+            <input type="number" name="menuPrice" placeholder="가격을 입력하세요">
+            <div class="form-text">원을 초과하는 메뉴 목록 조회</div>
+            <input type="submit" value="메뉴 검색">
+        </form>
+    </div>
+
+    <div class="guide">🔥 원하는 가격보다 비싼 메뉴만 골라서 확인할 수 있어 🔥</div>
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: module04-association-mapping
+    name: module07-jpa-mini-project
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/menudb
@@ -18,9 +18,3 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-
-
-
-
-

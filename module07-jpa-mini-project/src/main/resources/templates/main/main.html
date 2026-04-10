@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wanted Menu Restaurant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(180deg, #1a0000 0%, #3b0a0a 45%, #5c1d1d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff4e6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            padding: 45px 35px;
+            border-radius: 28px;
+            background:
+                    linear-gradient(180deg, rgba(40, 0, 0, 0.92), rgba(75, 10, 10, 0.96));
+            border: 2px solid rgba(255, 120, 60, 0.35);
+            box-shadow:
+                    0 0 25px rgba(255, 80, 0, 0.18),
+                    0 0 60px rgba(120, 0, 0, 0.35),
+                    0 18px 40px rgba(0, 0, 0, 0.45);
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #ffb347;
+            text-shadow:
+                    0 0 8px rgba(255, 120, 0, 0.55),
+                    0 0 18px rgba(255, 60, 0, 0.4);
+        }
+
+        .subtitle {
+            margin-bottom: 32px;
+            color: #ffd7b3;
+            font-size: 0.98rem;
+            letter-spacing: 0.5px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            color: #fff8f0;
+            background: linear-gradient(135deg, #7a0c0c, #c62828 55%, #ff6f00);
+            box-shadow:
+                    0 8px 18px rgba(0, 0, 0, 0.28),
+                    inset 0 1px 0 rgba(255, 220, 180, 0.18);
+            transition: all 0.22s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow:
+                    0 12px 24px rgba(0, 0, 0, 0.35),
+                    0 0 16px rgba(255, 90, 0, 0.35);
+            background: linear-gradient(135deg, #921111, #e53935 55%, #ff8f00);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .fire {
+            font-size: 1.3rem;
+            margin: 0 4px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 18px;
+                padding: 34px 22px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            button {
+                font-size: 0.95rem;
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>😈 원티드 메뉴 레스토랑 😈</h1>
+    <div class="subtitle">
+        <span class="fire">🔥</span>지옥처럼 강렬한 맛을 선택해봐<span class="fire">🔥</span>
+    </div>
+
+    <div class="button-group">
+        <button onclick="location.href='/menu/13'">🍖 특정 메뉴 조회</button>
+        <button onclick="location.href='/menu/list'">🍽 전체 메뉴 조회</button>
+        <button onclick="location.href='/menu/querymethod'">😈 쿼리메소드</button>
+        <button onclick="location.href='/menu/regist'">➕ 메뉴 등록</button>
+        <button onclick="location.href='/menu/modify'">✏ 메뉴 수정</button>
+        <button onclick="location.href='/menu/delete'">🔥 메뉴 삭제</button>
+    </div>
+</div>
+</body>
+</html>
