@@ -67,6 +67,38 @@ public class MenuController {
     @ResponseBody
     public List<CategoryDTO> findCategoryList() {
         return menuService.findAllcategory();
+    }
+
+//    @DeleteMapping("/delete/{menuCode}")
+//    @ResponseBody
+//    public String deleteTestMethod(@RequestBody MemberDTO memberDTO) {
+//
+//        return menuCode + "번 메뉴 삭제 완료!";
+//    }
+
+    @PostMapping("/regist")
+    public ModelAndView registMenu(@ModelAttribute MenuDTO registMenu , ModelAndView mv) {
+
+        System.out.println("메뉴 등록 시 화면에서 넘어오는 값 = " + registMenu);
+        int menuCode = menuService.registNewMenu(registMenu);
+        System.out.println("서비스에서 전달 받은 menuCode = " + menuCode);
+
+        mv.setViewName("redirect:/menu/" + menuCode);
+
+        return mv;
+    }
+
+    @GetMapping("/modify")
+    public void modifyPage() {}
+
+    @PostMapping("/modify")
+    public ModelAndView modifyMenuName(@RequestParam int menuCode, @RequestParam String menuName, ModelAndView mv) {
+
+        menuService.modifyMenuName(menuCode, menuName);
+
+        mv.setViewName("redirect:/menu/" + menuCode);
+
+        return mv;
 
     }
 }
