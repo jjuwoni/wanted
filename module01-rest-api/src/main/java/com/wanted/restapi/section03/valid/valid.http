@@ -1,0 +1,192 @@
+# 목차. 2. 신규 사용자 가입 시 유효성 검사 테스트
+### POST 요청: 아이디가 null인 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": null,
+  "pwd": "ValidPwd1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 아이디가 빈 문자열인 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "",
+  "pwd": "ValidPwd1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 아이디가 공백 문자열인 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "    ",
+  "pwd": "ValidPwd1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 아이디가 너무 짧은 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "short",
+  "pwd": "ValidPwd1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 아이디가 너무 긴 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "thisIsAVeryLongUsernameThatExceeds20Chars",
+  "pwd": "ValidPwd1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 아이디에 허용되지 않은 문자가 포함된 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "invalid$id!",
+  "pwd": "ValidPwd1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 패스워드가 너무 짧은 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "short1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 패스워드가 너무 긴 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "ThisPasswordIsWayTooLongAndExceeds30Chars!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 패스워드에 대문자가 없는 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "validpwd1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 패스워드에 소문자가 없는 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "VALIDPWD1!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 패스워드에 숫자가 없는 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "Validpwd!",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 패스워드에 특수문자가 없는 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "ValidPwd123",
+  "name": "John",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 이름이 null인 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "ValidPwd1!",
+  "name": null,
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 이름이 너무 짧은 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "ValidPwd1!",
+  "name": "J",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 이름이 너무 긴 경우
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "ValidPwd1!",
+  "name": "Johnathan",
+  "enrollDate": "2000-01-01"
+}
+
+### POST 요청: 등록일이 현재보다 미래인 경우(불가능, 혹은 오류)
+POST http://localhost:8080/valid/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "validUser01",
+  "pwd": "ValidPwd1!",
+  "name": "John",
+  "enrollDate": "2999-01-01"
+}
