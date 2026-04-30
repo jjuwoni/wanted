@@ -1,3 +1,45 @@
+# module01-spring-test 메인 애플리케이션 설정
+# 
+# 이 파일은 운영 및 개발 환경에서 사용되는 기본 설정을 정의한다.
+# 테스트 환경에서는 src/test/resources/application.yaml이 우선 적용된다.
+
+# 서버 설정
+server:
+  port: 8080
+
+# Spring 기본 설정
 spring:
+  # 애플리케이션 정보
   application:
     name: module01-spring-test
+  
+  # 데이터베이스 설정 (Section 03 JPA 테스트용)
+  datasource:
+    url: jdbc:h2:mem:calculatordb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  
+  # H2 콘솔 설정 (개발용)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  # JPA 설정 (Section 03에서만 사용)
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  
+  # SQL 초기화 설정
+  sql:
+    init:
+      mode: never
+
+# 로깅 설정
+logging:
+  level:
+    com.ohgiraffers.springtest: INFO
+    org.springframework: WARN
+    org.hibernate: WARN
