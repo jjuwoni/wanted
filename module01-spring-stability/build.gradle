@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.13'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.ohgiraffers'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // 공용: 데이터베이스 연동을 위한 JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // 공용: 인메모리 데이터베이스 H2
+    implementation 'com.h2database:h2'
+    
+    // section 02: AOP 기반 로깅 구현을 위한 AspectJ 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    
+    // section 03: 데이터 유효성 검증을 위한 Bean Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

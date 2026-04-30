@@ -1,0 +1,14 @@
+2026-04-29 12:20:27.648 [2605f4a0] c.o.s.s.logging.service.LoanService - [s2][LoanService] 도서 대출 요청 - 회원 ID: 1, 도서 ID: 1
+2026-04-29 12:20:27.714 [2605f4a0] c.o.s.s.logging.service.LoanService - [s2][LoanService] 도서 대출 완료 - 대출 ID: 1, 회원: 김도서, 도서: 스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판), 반납 예정일: 2026-05-13T12:20:27.707349900
+2026-04-29 12:20:27.789 [49ef91ea] c.o.s.s.logging.service.LoanService - [s2][LoanService] 도서 대출 요청 - 회원 ID: 1, 도서 ID: 2
+2026-04-29 12:20:27.992 [736ea8f7] c.o.s.s.logging.service.LoanService - [s2][LoanService] 대출 연장 요청 - 대출 ID: 1, 연장 일수: 7일
+2026-04-29 12:20:28.008 [736ea8f7] c.o.s.s.logging.service.LoanService - [s2][LoanService] 대출 연장 완료 - 대출 ID: 1, 기존 반납일: 2026-05-13T12:20:27.707350, 새 반납일: 2026-05-20T12:20:27.707350
+2026-04-29 12:20:28.042 [44e5b712] c.o.s.s.logging.service.LoanService - [s2][LoanService] 도서 반납 요청 - 대출 ID: 1
+2026-04-29 12:20:28.049 [44e5b712] c.o.s.s.logging.service.LoanService - [s2][LoanService] 정상 반납 완료 - 대출 ID: 1, 회원: 김도서, 도서: 스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)
+2026-04-29 12:20:28.100 [541591d1] c.o.s.s.logging.service.LoanService - [s2][LoanService] 연체 대출 현황 - 총 0건의 연체 대출 발견
+2026-04-29 12:20:28.148 [95be865b] c.o.s.s.logging.service.LoanService - [s2][LoanService] 연체 대출 일괄 처리 시작
+2026-04-29 12:20:28.150 [95be865b] c.o.s.s.logging.service.LoanService - [s2][LoanService] 연체 대출 일괄 처리 완료 - 처리 건수: 0건
+2026-04-29 12:20:28.435 [cd71d303] c.o.s.s.logging.service.LoanService - [s2][LoanService] 도서 대출 요청 - 회원 ID: 999, 도서 ID: 1
+2026-04-29 12:20:28.545 [3df42618] c.o.s.s.logging.service.LoanService - [s2][LoanService] 도서 대출 요청 - 회원 ID: 1, 도서 ID: 999
+2026-04-29 12:20:28.608 [64a192f4] c.o.s.s.logging.service.LoanService - [s2][LoanService] 도서 반납 요청 - 대출 ID: 1
+2026-04-29 12:20:28.659 [dfe4129a] c.o.s.s.logging.service.LoanService - [s2][LoanService] 대출 연장 요청 - 대출 ID: 2, 연장 일수: 30일

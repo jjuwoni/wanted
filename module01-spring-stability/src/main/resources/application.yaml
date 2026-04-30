@@ -1,0 +1,47 @@
+spring:
+  profiles:
+    # 개발 환경에서 사용할 프로파일 설정 (dev)
+    # profiles: 속성을 작성하지 않으면 기본적으로 'default' 프로파일이 활성화됨
+    # 테스트 환경에서 사용할 프로파일 설정 (test)
+    active: dev
+  datasource:
+    # 설치가 필요한 MySQL 대신에 테스트용 in-memory 데이터베이스인 H2 사용
+    # 인메모리로 동작하기 때문에 애플리케이션 시작 시 데이터베이스 및 테이블이 생성되고,
+    # 애플리케이션 종료 시 데이터베이스 및 테이블이 삭제됨
+    url: jdbc:h2:mem:library
+    driver-class-name: org.h2.Driver
+    username: ohgiraffers
+    password: ohgiraffers
+  # H2 접속 콘솔 활성화: 웹 브라우저에서 http://localhost:8080/h2-console 주소로 접속 가능
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  # JPA 설정
+  jpa:
+    hibernate:
+      # create-drop: 애플리케이션 시작 시 테이블 생성, 애플리케이션 종료 시 테이블 삭제
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    # Spring Boot가 테이블을 생성한 후 data.sql을 실행하도록 설정
+    defer-datasource-initialization: true
+  # SQL 초기화 설정
+  sql:
+    init:
+      # 데이터 삽입 모드 (always: 항상 실행, embedded: 임베디드 DB만, never: 실행 안함)
+      mode: always
+      encoding: UTF-8
+  # AOP 설정
+  aop:
+    proxy-target-class: true
+
+# 로깅 설정
+logging:
+  level:
+    com.ohgiraffers.stability: DEBUG
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId}] %logger{36} - %msg%n"

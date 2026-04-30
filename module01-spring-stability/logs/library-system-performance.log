@@ -1,0 +1,90 @@
+2026-04-29 12:16:18.551 [d2e7de2b] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#getSystemStatus 실행 시작 - 매개변수: []
+2026-04-29 12:16:18.553 [d2e7de2b] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#getSystemStatus 실행 완료 - 반환값: <200 OK OK,{timestamp=2026-04-29T12:16:18.553340500, status=HEALTHY, message=대출 시스템이 정상적으로 동작 중입니다.},[]>
+2026-04-29 12:20:27.161 [1d5bf059] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#getSystemStatus 실행 시작 - 매개변수: []
+2026-04-29 12:20:27.161 [1d5bf059] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#getSystemStatus 실행 완료 - 반환값: <200 OK OK,{timestamp=2026-04-29T12:20:27.161734200, status=HEALTHY, message=대출 시스템이 정상적으로 동작 중입니다.},[]>
+2026-04-29 12:20:27.646 [2605f4a0] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#createLoan 실행 시작 - 매개변수: [1, 1]
+2026-04-29 12:20:27.647 [2605f4a0] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 시작 - 작업: createLoan, 매개변수: [1, 1]
+2026-04-29 12:20:27.648 [2605f4a0] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#createLoan 실행 시작 - 매개변수: [1, 1]
+2026-04-29 12:20:27.715 [2605f4a0] c.o.s.s.logging.aspect.LoggingAspect - <== LoanService#createLoan 실행 완료 - 반환값: LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707349900, dueDate=2026-05-13T12:20:27.707349900, returnDate=null, status=ACTIVE, overdueDays=0, fineAmount=0}
+2026-04-29 12:20:27.725 [2605f4a0] c.o.s.s.logging.aspect.LoggingAspect - LoanService#createLoan 실행 시간: 77ms
+2026-04-29 12:20:27.725 [2605f4a0] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 성공 - 작업: createLoan, 결과: LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707349900, dueDate=2026-05-13T12:20:27.707349900, returnDate=null, status=ACTIVE, overdueDays=0, fineAmount=0}
+2026-04-29 12:20:27.728 [2605f4a0] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#createLoan 실행 완료 - 반환값: <201 CREATED Created,LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707349900, dueDate=2026-05-13T12:20:27.707349900, returnDate=null, status=ACTIVE, overdueDays=0, fineAmount=0},[]>
+2026-04-29 12:20:27.789 [49ef91ea] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#createLoan 실행 시작 - 매개변수: [1, 2]
+2026-04-29 12:20:27.789 [49ef91ea] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 시작 - 작업: createLoan, 매개변수: [1, 2]
+2026-04-29 12:20:27.789 [49ef91ea] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#createLoan 실행 시작 - 매개변수: [1, 2]
+2026-04-29 12:20:27.793 [49ef91ea] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanService#createLoan 실행 중 예외 발생 - 예외: BookNotFoundException, 메시지: 해당 ID의 도서를 찾을 수 없습니다: 2
+2026-04-29 12:20:27.793 [49ef91ea] c.o.s.s.logging.aspect.LoggingAspect - LoanService#createLoan 실행 실패 - 실행 시간: 4ms, 예외: 해당 ID의 도서를 찾을 수 없습니다: 2
+2026-04-29 12:20:27.794 [49ef91ea] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 실패 - 작업: createLoan, 예외: BookNotFoundException, 메시지: 해당 ID의 도서를 찾을 수 없습니다: 2
+2026-04-29 12:20:27.794 [49ef91ea] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanController#createLoan 실행 중 예외 발생 - 예외: BookNotFoundException, 메시지: 해당 ID의 도서를 찾을 수 없습니다: 2
+2026-04-29 12:20:27.866 [ee78aeaa] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#getLoansByMember 실행 시작 - 매개변수: [1]
+2026-04-29 12:20:27.867 [ee78aeaa] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#findLoansByMember 실행 시작 - 매개변수: [1]
+2026-04-29 12:20:27.893 [ee78aeaa] c.o.s.s.logging.aspect.LoggingAspect - <== LoanService#findLoansByMember 실행 완료 - 반환값: [LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-13T12:20:27.707350, returnDate=null, status=ACTIVE, overdueDays=0, fineAmount=0}]
+2026-04-29 12:20:27.893 [ee78aeaa] c.o.s.s.logging.aspect.LoggingAspect - LoanService#findLoansByMember 실행 시간: 26ms
+2026-04-29 12:20:27.894 [ee78aeaa] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#getLoansByMember 실행 완료 - 반환값: <200 OK OK,[LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-13T12:20:27.707350, returnDate=null, status=ACTIVE, overdueDays=0, fineAmount=0}],[]>
+2026-04-29 12:20:27.991 [736ea8f7] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#extendLoan 실행 시작 - 매개변수: [1, 7]
+2026-04-29 12:20:27.992 [736ea8f7] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 시작 - 작업: extendLoan, 매개변수: [1, 7]
+2026-04-29 12:20:27.992 [736ea8f7] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#extendLoan 실행 시작 - 매개변수: [1, 7]
+2026-04-29 12:20:28.010 [736ea8f7] c.o.s.s.logging.aspect.LoggingAspect - <== LoanService#extendLoan 실행 완료 - 반환값: LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-20T12:20:27.707350, returnDate=null, status=ACTIVE, overdueDays=0, fineAmount=0}
+2026-04-29 12:20:28.010 [736ea8f7] c.o.s.s.logging.aspect.LoggingAspect - LoanService#extendLoan 실행 시간: 18ms
+2026-04-29 12:20:28.010 [736ea8f7] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 성공 - 작업: extendLoan, 결과: LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-20T12:20:27.707350, returnDate=null, status=ACTIVE, overdueDays=0, fineAmount=0}
+2026-04-29 12:20:28.012 [736ea8f7] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#extendLoan 실행 완료 - 반환값: <200 OK OK,LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-20T12:20:27.707350, returnDate=null, status=ACTIVE, overdueDays=0, fineAmount=0},[]>
+2026-04-29 12:20:28.042 [44e5b712] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#returnBook 실행 시작 - 매개변수: [1]
+2026-04-29 12:20:28.042 [44e5b712] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 시작 - 작업: returnBook, 매개변수: [1]
+2026-04-29 12:20:28.042 [44e5b712] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#returnBook 실행 시작 - 매개변수: [1]
+2026-04-29 12:20:28.049 [44e5b712] c.o.s.s.logging.aspect.LoggingAspect - <== LoanService#returnBook 실행 완료 - 반환값: LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-20T12:20:27.707350, returnDate=2026-04-29T12:20:28.046146200, status=RETURNED, overdueDays=0, fineAmount=0}
+2026-04-29 12:20:28.050 [44e5b712] c.o.s.s.logging.aspect.LoggingAspect - LoanService#returnBook 실행 시간: 8ms
+2026-04-29 12:20:28.050 [44e5b712] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 성공 - 작업: returnBook, 결과: LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-20T12:20:27.707350, returnDate=2026-04-29T12:20:28.046146200, status=RETURNED, overdueDays=0, fineAmount=0}
+2026-04-29 12:20:28.053 [44e5b712] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#returnBook 실행 완료 - 반환값: <200 OK OK,LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-20T12:20:27.707350, returnDate=2026-04-29T12:20:28.046146200, status=RETURNED, overdueDays=0, fineAmount=0},[]>
+2026-04-29 12:20:28.094 [541591d1] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#getOverdueLoans 실행 시작 - 매개변수: []
+2026-04-29 12:20:28.094 [541591d1] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#findOverdueLoans 실행 시작 - 매개변수: []
+2026-04-29 12:20:28.100 [541591d1] c.o.s.s.logging.aspect.LoggingAspect - <== LoanService#findOverdueLoans 실행 완료 - 반환값: []
+2026-04-29 12:20:28.100 [541591d1] c.o.s.s.logging.aspect.LoggingAspect - LoanService#findOverdueLoans 실행 시간: 6ms
+2026-04-29 12:20:28.101 [541591d1] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#getOverdueLoans 실행 완료 - 반환값: <200 OK OK,[],[]>
+2026-04-29 12:20:28.147 [95be865b] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#processOverdueLoans 실행 시작 - 매개변수: []
+2026-04-29 12:20:28.148 [95be865b] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#processOverdueLoans 실행 시작 - 매개변수: []
+2026-04-29 12:20:28.150 [95be865b] c.o.s.s.logging.aspect.LoggingAspect - <== LoanService#processOverdueLoans 실행 완료 - 반환값: 0
+2026-04-29 12:20:28.150 [95be865b] c.o.s.s.logging.aspect.LoggingAspect - LoanService#processOverdueLoans 실행 시간: 3ms
+2026-04-29 12:20:28.150 [95be865b] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#processOverdueLoans 실행 완료 - 반환값: <200 OK OK,{message=연체 대출 일괄 처리가 완료되었습니다., processedCount=0},[]>
+2026-04-29 12:20:28.200 [7e1bd6dc] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#testLogging 실행 시작 - 매개변수: [debug, 디버그 로그 테스트입니다]
+2026-04-29 12:20:28.200 [7e1bd6dc] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#testLogging 실행 완료 - 반환값: <200 OK OK,{result=로깅 테스트가 완료되었습니다., level=debug, message=디버그 로그 테스트입니다},[]>
+2026-04-29 12:20:28.268 [ba218cb0] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#testLogging 실행 시작 - 매개변수: [info, 정보 로그 테스트입니다]
+2026-04-29 12:20:28.268 [ba218cb0] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#testLogging 실행 완료 - 반환값: <200 OK OK,{result=로깅 테스트가 완료되었습니다., level=info, message=정보 로그 테스트입니다},[]>
+2026-04-29 12:20:28.314 [b5baaa73] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#testLogging 실행 시작 - 매개변수: [warn, 경고 로그 테스트입니다]
+2026-04-29 12:20:28.315 [b5baaa73] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#testLogging 실행 완료 - 반환값: <200 OK OK,{result=로깅 테스트가 완료되었습니다., level=warn, message=경고 로그 테스트입니다},[]>
+2026-04-29 12:20:28.367 [f6e61828] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#testLogging 실행 시작 - 매개변수: [error, 에러 로그 테스트입니다]
+2026-04-29 12:20:28.368 [f6e61828] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#testLogging 실행 완료 - 반환값: <200 OK OK,{result=로깅 테스트가 완료되었습니다., level=error, message=에러 로그 테스트입니다},[]>
+2026-04-29 12:20:28.434 [cd71d303] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#createLoan 실행 시작 - 매개변수: [999, 1]
+2026-04-29 12:20:28.435 [cd71d303] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 시작 - 작업: createLoan, 매개변수: [999, 1]
+2026-04-29 12:20:28.435 [cd71d303] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#createLoan 실행 시작 - 매개변수: [999, 1]
+2026-04-29 12:20:28.436 [cd71d303] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanService#createLoan 실행 중 예외 발생 - 예외: IllegalArgumentException, 메시지: 존재하지 않는 회원입니다: 999
+2026-04-29 12:20:28.436 [cd71d303] c.o.s.s.logging.aspect.LoggingAspect - LoanService#createLoan 실행 실패 - 실행 시간: 1ms, 예외: 존재하지 않는 회원입니다: 999
+2026-04-29 12:20:28.437 [cd71d303] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 실패 - 작업: createLoan, 예외: IllegalArgumentException, 메시지: 존재하지 않는 회원입니다: 999
+2026-04-29 12:20:28.437 [cd71d303] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanController#createLoan 실행 중 예외 발생 - 예외: IllegalArgumentException, 메시지: 존재하지 않는 회원입니다: 999
+2026-04-29 12:20:28.544 [3df42618] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#createLoan 실행 시작 - 매개변수: [1, 999]
+2026-04-29 12:20:28.545 [3df42618] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 시작 - 작업: createLoan, 매개변수: [1, 999]
+2026-04-29 12:20:28.545 [3df42618] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#createLoan 실행 시작 - 매개변수: [1, 999]
+2026-04-29 12:20:28.548 [3df42618] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanService#createLoan 실행 중 예외 발생 - 예외: BookNotFoundException, 메시지: 해당 ID의 도서를 찾을 수 없습니다: 999
+2026-04-29 12:20:28.548 [3df42618] c.o.s.s.logging.aspect.LoggingAspect - LoanService#createLoan 실행 실패 - 실행 시간: 3ms, 예외: 해당 ID의 도서를 찾을 수 없습니다: 999
+2026-04-29 12:20:28.548 [3df42618] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 실패 - 작업: createLoan, 예외: BookNotFoundException, 메시지: 해당 ID의 도서를 찾을 수 없습니다: 999
+2026-04-29 12:20:28.548 [3df42618] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanController#createLoan 실행 중 예외 발생 - 예외: BookNotFoundException, 메시지: 해당 ID의 도서를 찾을 수 없습니다: 999
+2026-04-29 12:20:28.607 [64a192f4] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#returnBook 실행 시작 - 매개변수: [1]
+2026-04-29 12:20:28.608 [64a192f4] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 시작 - 작업: returnBook, 매개변수: [1]
+2026-04-29 12:20:28.608 [64a192f4] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#returnBook 실행 시작 - 매개변수: [1]
+2026-04-29 12:20:28.611 [64a192f4] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanService#returnBook 실행 중 예외 발생 - 예외: IllegalArgumentException, 메시지: 이미 반납된 도서입니다: 1
+2026-04-29 12:20:28.611 [64a192f4] c.o.s.s.logging.aspect.LoggingAspect - LoanService#returnBook 실행 실패 - 실행 시간: 3ms, 예외: 이미 반납된 도서입니다: 1
+2026-04-29 12:20:28.611 [64a192f4] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 실패 - 작업: returnBook, 예외: IllegalArgumentException, 메시지: 이미 반납된 도서입니다: 1
+2026-04-29 12:20:28.613 [64a192f4] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanController#returnBook 실행 중 예외 발생 - 예외: IllegalArgumentException, 메시지: 이미 반납된 도서입니다: 1
+2026-04-29 12:20:28.658 [dfe4129a] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#extendLoan 실행 시작 - 매개변수: [2, 30]
+2026-04-29 12:20:28.658 [dfe4129a] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 시작 - 작업: extendLoan, 매개변수: [2, 30]
+2026-04-29 12:20:28.659 [dfe4129a] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#extendLoan 실행 시작 - 매개변수: [2, 30]
+2026-04-29 12:20:28.661 [dfe4129a] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanService#extendLoan 실행 중 예외 발생 - 예외: IllegalArgumentException, 메시지: 존재하지 않는 대출입니다: 2
+2026-04-29 12:20:28.661 [dfe4129a] c.o.s.s.logging.aspect.LoggingAspect - LoanService#extendLoan 실행 실패 - 실행 시간: 2ms, 예외: 존재하지 않는 대출입니다: 2
+2026-04-29 12:20:28.661 [dfe4129a] c.o.s.s.logging.aspect.LoggingAspect - 비즈니스 이벤트 실패 - 작업: extendLoan, 예외: IllegalArgumentException, 메시지: 존재하지 않는 대출입니다: 2
+2026-04-29 12:20:28.661 [dfe4129a] c.o.s.s.logging.aspect.LoggingAspect - !!! LoanController#extendLoan 실행 중 예외 발생 - 예외: IllegalArgumentException, 메시지: 존재하지 않는 대출입니다: 2
+2026-04-29 12:20:28.698 [05143d4d] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#getLoansByMember 실행 시작 - 매개변수: [1]
+2026-04-29 12:20:28.699 [05143d4d] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanService#findLoansByMember 실행 시작 - 매개변수: [1]
+2026-04-29 12:20:28.707 [05143d4d] c.o.s.s.logging.aspect.LoggingAspect - <== LoanService#findLoansByMember 실행 완료 - 반환값: [LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-20T12:20:27.707350, returnDate=2026-04-29T12:20:28.046146, status=RETURNED, overdueDays=0, fineAmount=0}]
+2026-04-29 12:20:28.707 [05143d4d] c.o.s.s.logging.aspect.LoggingAspect - LoanService#findLoansByMember 실행 시간: 8ms
+2026-04-29 12:20:28.707 [05143d4d] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#getLoansByMember 실행 완료 - 반환값: <200 OK OK,[LoanDTO{loanId=1, memberId=1, memberName='김도서', bookId=1, bookTitle='스프링 부트와 AWS로 혼자 구현하는 웹 서비스 (개정판)', bookIsbn='9781234567890', loanDate=2026-04-29T12:20:27.707350, dueDate=2026-05-20T12:20:27.707350, returnDate=2026-04-29T12:20:28.046146, status=RETURNED, overdueDays=0, fineAmount=0}],[]>
+2026-04-29 12:20:28.887 [c99d4078] c.o.s.s.logging.aspect.LoggingAspect - ==> LoanController#getSystemStatus 실행 시작 - 매개변수: []
+2026-04-29 12:20:28.887 [c99d4078] c.o.s.s.logging.aspect.LoggingAspect - <== LoanController#getSystemStatus 실행 완료 - 반환값: <200 OK OK,{timestamp=2026-04-29T12:20:28.887256600, status=HEALTHY, message=대출 시스템이 정상적으로 동작 중입니다.},[]>

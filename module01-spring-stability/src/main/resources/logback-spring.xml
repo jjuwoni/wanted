@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    ============================================================
+    📘 logback-spring.xml 수업용 최종본
+    ============================================================
+
+    ✅ 이 파일의 역할
+    - Spring Boot 애플리케이션의 로그 출력 방식을 설정한다.
+    - 로그를 콘솔에 출력하거나 파일로 저장할 수 있다.
+    - 개발(dev), 운영(prod), 테스트(test) 환경별로 로그 정책을 다르게 적용할 수 있다.
+
+    ✅ 로그 처리 흐름
+    Logger → Appender → Encoder → 실제 출력
+
+    1. Logger
+       - 로그를 발생시키는 주체
+       - 보통 패키지명 또는 클래스명을 기준으로 설정한다.
+
+    2. Appender
+       - 로그를 어디로 보낼지 결정한다.
+       - 예: 콘솔, 파일, 에러 파일, 비즈니스 로그 파일 등
+
+    3. Encoder
+       - 로그를 어떤 형식으로 출력할지 결정한다.
+
+    4. RollingPolicy
+       - 로그 파일이 너무 커지지 않도록 날짜나 크기 기준으로 파일을 나눈다.
+
+
+    ✅ 로그 레벨
+    TRACE < DEBUG < INFO < WARN < ERROR
+
+    - TRACE : 가장 자세한 로그
+    - DEBUG : 개발 중 디버깅용 로그
+    - INFO  : 정상적인 흐름 기록
+    - WARN  : 경고 상황
+    - ERROR : 실제 오류 상황
+
+    예)
+    level="INFO"이면 INFO, WARN, ERROR 로그만 출력된다.
+    DEBUG, TRACE 로그는 출력되지 않는다.
+
+
+    ✅ MDC란?
+    - MDC는 로그에 추가 정보를 함께 출력하기 위한 저장 공간이다.
+    - 예: traceId, requestURI, remoteAddr 등
+    - 하나의 요청을 추적할 때 유용하다.
+
+    예)
+    %X{traceId:-}
+    → MDC에 traceId가 있으면 출력하고, 없으면 빈 값으로 출력한다.
+
+
+    ✅ additivity란?
+    - Logger는 부모 Logger로 로그를 전달할 수 있다.
+    - additivity="false"는 부모 Logger로 전달하지 않겠다는 의미다.
+    - 주로 로그가 중복 출력되는 것을 막기 위해 사용한다.
+-->
+
+<configuration>
+
+    <!-- ===================================================== -->
+    <!-- 1. 공통 속성 설정 -->
+    <!-- ===================================================== -->
+
+    <!--
+        LOG_PATH
+        - 로그 파일이 저장될 폴더 경로
+        - ./logs는 현재 애플리케이션 실행 위치 기준 logs 폴더를 의미한다.
+    -->
+    <property name="LOG_PATH" value="./logs"/>
+
+    <!--
+        LOG_FILE_NAME
+        - 로그 파일의 기본 이름
+        - 아래 설정에 따라 library-system.log,
+          library-system-error.log 같은 파일이 생성된다.
+    -->
+    <property name="LOG_FILE_NAME" value="library-system"/>
+
+    <!--
+        콘솔 로그 패턴
+
+        %d{yyyy-MM-dd HH:mm:ss.SSS}
+        - 로그가 찍힌 날짜와 시간
+
+        [%thread]
+        - 현재 로그를 출력한 스레드 이름
+
+        %highlight(%-5level)
+        - 로그 레벨을 색상 강조해서 출력
+        - 콘솔에서만 의미가 크다.
+
+        %cyan([%X{traceId:-}])
+        - MDC에 저장된 traceId를 출력
+        - 요청 추적용
+
+        %yellow(%logger{36})
+        - 로그를 출력한 Logger 이름
+        - 보통 클래스명 또는 패키지명
+
+        %msg
+        - 개발자가 작성한 로그 메시지
+
+        %n
+        - 줄바꿈
+    -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan([%X{traceId:-}]) %yellow(%logger{36}) - %msg%n"/>
+
+    <!--
+        파일 로그 패턴
+
+        콘솔보다 더 많은 정보를 파일에 남긴다.
+        운영 환경에서는 장애 분석을 위해 요청 정보가 중요하다.
+
+        %X{method:-}
+        - HTTP Method 예: GET, POST
+
+        %X{requestURI:-}
+        - 요청 URI 예: /books/1
+
+        %X{remoteAddr:-}
+        - 요청한 클라이언트 IP
+    -->
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-}] [%X{method:-}] [%X{requestURI:-}] [%X{remoteAddr:-}] %logger{36} - %msg%n"/>
+
+
+    <!-- ===================================================== -->
+    <!-- 2. Appender 설정 -->
+    <!-- ===================================================== -->
+
+    <!--
+        CONSOLE Appender
+
+        - 로그를 콘솔에 출력한다.
+        - 개발 환경에서 가장 많이 확인하는 출력 방식이다.
+    -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 위에서 정의한 콘솔 로그 패턴 사용 -->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+
+            <!-- 한글 깨짐 방지 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+
+    <!--
+        FILE Appender
+
+        - 전체 로그를 파일로 저장한다.
+        - INFO, WARN, ERROR 등 일반 로그가 기록된다.
+    -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!-- 현재 기록 중인 로그 파일 -->
+        <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+
+        <!--
+            RollingPolicy
+
+            로그 파일이 계속 커지면 디스크 용량 문제가 생길 수 있다.
+            그래서 날짜와 파일 크기를 기준으로 로그 파일을 자동 분리한다.
+        -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <!--
+                분리된 로그 파일 이름 규칙
+
+                %d{yyyy-MM-dd}
+                - 날짜별로 파일 생성
+
+                %i
+                - 같은 날짜에 파일이 여러 개 생기면 번호 부여
+            -->
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+            <!-- 파일 하나의 최대 크기 -->
+            <maxFileSize>10MB</maxFileSize>
+
+            <!-- 로그 파일 보관 기간: 30일 -->
+            <maxHistory>30</maxHistory>
+
+            <!-- 전체 로그 파일 용량 제한 -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+    <!--
+        ERROR_FILE Appender
+
+        - ERROR 레벨 로그만 별도 파일에 저장한다.
+        - 장애 분석 시 가장 먼저 확인하는 파일이다.
+    -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_PATH}/${LOG_FILE_NAME}-error.log</file>
+
+        <!--
+            LevelFilter
+
+            ERROR 레벨만 통과시키고,
+            DEBUG, INFO, WARN 로그는 저장하지 않는다.
+        -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+    <!--
+        BUSINESS_FILE Appender
+
+        - 비즈니스 로직 관련 로그를 따로 저장한다.
+        - 예: 도서 대여 성공, 회원 가입, 주문 완료 등
+        - 운영 중 서비스 흐름을 분석할 때 유용하다.
+    -->
+    <appender name="BUSINESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_PATH}/${LOG_FILE_NAME}-business.log</file>
+
+        <encoder>
+            <!-- 비즈니스 로그는 간단한 형식으로 기록 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId:-}] %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}-business.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+
+            <!-- 비즈니스 로그는 분석용으로 더 오래 보관 -->
+            <maxHistory>90</maxHistory>
+
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+    <!--
+        PERFORMANCE_FILE Appender
+
+        - 성능 측정 로그를 따로 저장한다.
+        - 예: 메서드 실행 시간, API 응답 시간 등
+        - 보통 AOP와 함께 사용한다.
+    -->
+    <appender name="PERFORMANCE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_PATH}/${LOG_FILE_NAME}-performance.log</file>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId:-}] %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}-performance.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+    <!-- ===================================================== -->
+    <!-- 3. 개발 환경 설정 -->
+    <!-- ===================================================== -->
+
+    <!--
+        dev, default profile
+
+        - 개발자가 로컬에서 실행할 때 사용하는 설정
+        - 콘솔 출력 활성화
+        - DEBUG 로그 일부 활성화
+    -->
+    <springProfile name="dev,default">
+
+        <!--
+            root Logger
+
+            - 별도 logger 설정이 없는 모든 로그에 적용된다.
+            - INFO 이상 로그를 CONSOLE, FILE, ERROR_FILE로 전달한다.
+        -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+
+        <!--
+            애플리케이션 패키지 Logger
+
+            - 우리 프로젝트 코드의 로그를 DEBUG 레벨부터 출력한다.
+            - 개발 중에는 상세 로그가 필요하기 때문이다.
+            - additivity=false로 중복 출력을 방지한다.
+        -->
+        <logger name="com.ohgiraffers.stability.section02.logging"
+                level="DEBUG"
+                additivity="false">
+
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
+
+        <!--
+            서비스 계층 Logger
+
+            - 비즈니스 로직 로그를 따로 분리한다.
+            - service 패키지에서 발생한 로그는 BUSINESS_FILE에도 기록된다.
+        -->
+        <logger name="com.ohgiraffers.stability.section02.logging.service"
+                level="INFO"
+                additivity="false">
+
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="BUSINESS_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
+
+        <!--
+            AOP 로깅 Logger
+
+            - LoggingAspect에서 발생한 로그를 성능 로그 파일에 저장한다.
+            - 실행 시간 측정 로그 등을 분리할 때 사용한다.
+        -->
+        <logger name="com.ohgiraffers.stability.section02.logging.aspect.LoggingAspect"
+                level="INFO"
+                additivity="false">
+
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="PERFORMANCE_FILE"/>
+        </logger>
+
+        <!--
+            Spring Framework 로그
+
+            - Spring 내부 로그 레벨을 조정한다.
+            - 너무 낮게 설정하면 로그가 과도하게 많이 출력될 수 있다.
+        -->
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.springframework.web" level="DEBUG"/>
+        <logger name="org.springframework.transaction" level="DEBUG"/>
+
+        <!--
+            Hibernate 로그
+
+            - SQL 확인용 설정
+            - 개발 중 JPA/Hibernate SQL 확인에 유용하다.
+        -->
+        <logger name="org.hibernate" level="INFO"/>
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+
+        <!--
+            SQL 바인딩 파라미터 확인
+
+            주의:
+            - Hibernate 버전에 따라 logger 이름이 다를 수 있다.
+            - Hibernate 5 계열에서 주로 사용된다.
+        -->
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
+
+    </springProfile>
+
+
+    <!-- ===================================================== -->
+    <!-- 4. 운영 환경 설정 -->
+    <!-- ===================================================== -->
+
+    <!--
+        prod profile
+
+        - 실제 서비스 운영 환경에서 사용하는 설정
+        - 콘솔 출력은 보통 사용하지 않는다.
+        - DEBUG 로그는 성능과 용량 문제 때문에 제한한다.
+    -->
+    <springProfile name="prod">
+
+        <!--
+            운영 환경 root Logger
+
+            - WARN 이상만 기록한다.
+            - 불필요한 INFO/DEBUG 로그를 줄여 성능과 디스크 사용량을 관리한다.
+        -->
+        <root level="WARN">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+
+        <!--
+            운영 환경 애플리케이션 Logger
+
+            - 우리 프로젝트 코드는 INFO 이상 기록
+            - 서비스 흐름 확인을 위해 INFO는 남긴다.
+        -->
+        <logger name="com.ohgiraffers.stability.section02.logging"
+                level="INFO"
+                additivity="false">
+
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
+
+        <!--
+            운영 환경 비즈니스 로그
+
+            - 서비스 주요 이벤트를 별도 파일에 기록한다.
+        -->
+        <logger name="com.ohgiraffers.stability.section02.logging.service"
+                level="INFO"
+                additivity="false">
+
+            <appender-ref ref="BUSINESS_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
+
+        <!--
+            운영 환경 성능 로그
+
+            - WARN 이상만 남기도록 제한한다.
+            - 성능 로그가 너무 많아질 수 있기 때문이다.
+        -->
+        <logger name="com.ohgiraffers.stability.section02.logging.aspect.LoggingAspect"
+                level="WARN"
+                additivity="false">
+
+            <appender-ref ref="PERFORMANCE_FILE"/>
+        </logger>
+
+        <!-- 외부 라이브러리 로그는 운영에서 최소화 -->
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="com.zaxxer.hikari" level="WARN"/>
+
+    </springProfile>
+
+
+    <!-- ===================================================== -->
+    <!-- 5. 테스트 환경 설정 -->
+    <!-- ===================================================== -->
+
+    <!--
+        test profile
+
+        - 단위 테스트 / 통합 테스트 실행 시 사용하는 설정
+        - 보통 콘솔 출력만 사용한다.
+        - 파일 로그는 테스트 속도와 관리 편의성을 위해 제외한다.
+    -->
+    <springProfile name="test">
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <!-- 테스트 중 우리 프로젝트 로그는 DEBUG까지 확인 -->
+        <logger name="com.ohgiraffers.stability.section02.logging"
+                level="DEBUG"
+                additivity="false">
+
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <!-- 테스트 프레임워크 내부 로그는 최소화 -->
+        <logger name="org.springframework.test" level="WARN"/>
+        <logger name="org.springframework.boot.test" level="WARN"/>
+
+    </springProfile>
+
+</configuration>
