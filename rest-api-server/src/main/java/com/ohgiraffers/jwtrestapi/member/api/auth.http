@@ -1,0 +1,21 @@
+### POST request: admin user login (localhost)
+POST localhost:8080/auth/login
+Content-Type:application/json
+Accept:*/*
+Access-Control-Allow-Origin:*
+
+{
+  "memberId": "admin",
+  "memberPassword": "1234"
+}
+
+### POST request: general user login (localhost)
+POST localhost:8080/auth/login
+Content-Type:application/json
+Accept:*/*
+Access-Control-Allow-Origin:*
+
+{
+  "memberId": "test01",
+  "memberPassword": "1234"
+}
