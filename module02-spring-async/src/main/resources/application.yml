@@ -1,0 +1,38 @@
+spring:
+  # 해당 구문은 프로젝트가 실행될 때 실행되는 sql 파일을 정의한다.
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+  datasource:
+    # 수업용 MySQL 연결 정보
+    url: jdbc:mysql://localhost:3306/wanted_lms
+    username: wanted
+    password: wanted
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      # 테이블 생성 책임은 Hibernate 가 아니라 schema.sql 에 둔다.
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+    show-sql: true
+
+#
+
+app:
+  async:
+    core-pool-size: 4
+    # 대기열이 가득 찬 뒤 추가 작업이 들어오면 이 수까지 워커 스레드를 늘릴 수 있다.
+    # core-pool-size 와 같게 두면 워커 수가 고정된 풀처럼 동작한다.
+    max-pool-size: 8
+    # 모든 기본 워커가 바쁠 때 즉시 실행하지 못한 작업이 기다리는 큐 크기.
+    # 큐가 너무 크면 요청은 잘 받아도 후처리가 늦게 밀릴 수 있고,
+    # 큐가 너무 작으면 순간 부하에서 거절 정책이 빨리 드러난다.
+    queue-capacity: 100
+    # 로그에서 요청 스레드(http-nio-*)와 비동기 워커 스레드를 구분하기 위한 접두사.
+    # @Async 수업에서는 이 이름을 기준으로 "어느 스레드가 실행했는가"를 먼저 확인한다.
+    thread-name-prefix: async-class-
