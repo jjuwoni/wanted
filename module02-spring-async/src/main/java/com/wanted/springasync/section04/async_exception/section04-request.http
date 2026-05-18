@@ -1,0 +1,5 @@
+GET localhost:8080/api/v1/section04/void-exception
+
+###
+
+POST localhost:8080/api/v1/section04/retry-jobs?userId=1&failUntilAttempt=2&maxRetryCount=3

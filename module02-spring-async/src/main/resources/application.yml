@@ -36,3 +36,6 @@ app:
     # 로그에서 요청 스레드(http-nio-*)와 비동기 워커 스레드를 구분하기 위한 접두사.
     # @Async 수업에서는 이 이름을 기준으로 "어느 스레드가 실행했는가"를 먼저 확인한다.
     thread-name-prefix: async-class-
+  retry:
+    # 스케쥴러의 동작 주기 설정 (5초)
+    fixed-delay-ms: 5000

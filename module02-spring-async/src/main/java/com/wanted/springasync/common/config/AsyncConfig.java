@@ -1,5 +1,7 @@
 package com.wanted.springasync.common.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +10,8 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.concurrent.Executor;
 
 @EnableAsync
@@ -48,5 +52,28 @@ public class AsyncConfig implements AsyncConfigurer {
     @Override
     public Executor getAsyncExecutor() {
         return classTaskExecutor(asyncProperties);
+    }
+
+    @Nullable
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return new LoggingAsyncExceptionHandler();
+    }
+
+    @Slf4j
+    private static class LoggingAsyncExceptionHandler implements AsyncUncaughtExceptionHandler{
+
+        // 비동기 관련 예외처리를 커스텀하는 내부 클래스 작성
+        // void 형태의 비동기 메서드의 예외는 호출자에게 직접 전달 할 방법이 없다.
+        // 고로, AsyncUncaughtExceptionHandler 에서 별도로 로깅 / 알림 처리 / 예외 처리를 해야 한다.
+        @Override
+        public void handleUncaughtException(Throwable ex, Method method, Object... params) {
+
+            log.error("[비동기 전용 예외 처리기] method = {}, params = {}, message = {}",
+                    method.getName(), Arrays.toString(params), ex.getMessage());
+
+        }
+
+
     }
 }
