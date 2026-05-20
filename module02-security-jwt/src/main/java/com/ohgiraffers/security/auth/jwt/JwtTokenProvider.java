@@ -86,6 +86,12 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(",")); // 예: "ROLE_USER,ROLE_ADMIN"
 
+        /* comment.
+        *   Jwts.builder 로 만들어지는 정보가
+        *   실제 Front 에서 활용할 수 있는 로그인 유저 관련 정보다.
+        *   현재는 userId 와 권한이 들어있어서 Front 에서는
+        *   이 2개의 값을 바탕으로 활용할 수 있게 된다.
+        * */
         return Jwts.builder()
                 .subject(username)
                 .claim("roles", authorities)

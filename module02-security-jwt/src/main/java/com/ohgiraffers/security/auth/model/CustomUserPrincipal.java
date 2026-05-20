@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+// UserDetails -> SecurityContext 에 들어갈 사용자 정보를 구성
 public class CustomUserPrincipal implements UserDetails {
     private final Long userId;
     private final String username;

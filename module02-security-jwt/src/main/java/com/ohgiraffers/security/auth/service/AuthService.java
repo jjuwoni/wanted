@@ -72,6 +72,8 @@ public class AuthService {
 
 
     public UserResponseDto register(SignupRequestDto request) {
+
+        // 우리 프로젝트의 비즈니스 정책
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new IllegalArgumentException("이미 사용 중인 사용자명입니다.");
         }

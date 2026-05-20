@@ -38,6 +38,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userService = userService;
     }
 
+    /* comment.
+    *   해당 메서드는 Login 요청 시 동작하는 Security 제공 메서드이다.
+    *   username 을 바탕으로 DB 에서 실제로 존재하는 사용자인 지 검색 후
+    *   존재하는 유저이면 return 구문에서 SecurityContext 에 들어갈
+    *   사용자 객체를 만들어준다.
+    * */
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

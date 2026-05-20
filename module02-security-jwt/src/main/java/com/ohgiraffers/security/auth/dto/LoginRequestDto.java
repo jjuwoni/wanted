@@ -28,6 +28,8 @@ public class LoginRequestDto {
 
     // Getter 메소드
     public String getUsername() {
+        // userId / username -> Spring Security 에서 기본 제공되는 메서드에서
+        // 우리가 생각하는 userId 를 username 으로 제공하고 있기 때문에
         return username;
     }
 

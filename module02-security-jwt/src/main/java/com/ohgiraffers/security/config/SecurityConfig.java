@@ -65,6 +65,10 @@ public class SecurityConfig {
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
+    /* comment.
+     *   8080 백엔드 서버와 5173 프론트 서버와 연결관련 설정
+     *   CORS -> 서로 다른 Origin(출처) 간의 연결 설정 허용
+     * */
 
     /**
      * CORS 설정을 위한 {@link CorsConfigurationSource} 빈을 정의
@@ -147,6 +151,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /* 인증/인가 관련 Security 에서 가장 중요한 설정 Bean */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         /*
@@ -159,6 +164,9 @@ public class SecurityConfig {
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 생성 X
                 .authorizeHttpRequests(auth -> auth
+                        // 이 곳은 1차 인증 인가 관련 방호벽이다.
+                        // /api/user/ 하위에 endpoint 중에 admin / user 권한 별로
+                        // 접근하게 하기 위해서는 메서드 레벨에서 2차로 방호벽을 구축한다.
                         .requestMatchers("/api/auth/**").permitAll() // 인증 없이 허용
                         .requestMatchers("/api/users/**").hasAnyAuthority( "ROLE_USER")
                         .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN")
