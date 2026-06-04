@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("""
-            select new com.wanted.skeleton.product.dto.PopularProductResponse(
+            select new com.wanted.actuator.product.dto.PopularProductResponse(
                 p.id, p.name, p.price, count(oi.id)
             )
             from OrderItem oi

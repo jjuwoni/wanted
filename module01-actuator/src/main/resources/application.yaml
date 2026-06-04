@@ -16,3 +16,14 @@ spring:
 logging:
   level:
     root: info
+
+# 엑츄에이터는 HTTP 를 통해 APP 운영 정보를 제공한다.
+# 개발 과정에서는 모든 엔드포인트를 공개할 수 있지만
+# 추후 운영 환경에서는 APP 민감 정보들이 노출 될 수 있기 때문에
+# 노출 시킬 EndPoint 를 정의한다.
+management:
+  endpoints:
+    web:
+      exposure:
+        # shop 은 custom endpoint 이다.
+        include: health, info, metrics, shop

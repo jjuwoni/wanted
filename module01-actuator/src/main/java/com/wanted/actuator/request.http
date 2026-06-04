@@ -1,0 +1,28 @@
+### 주문 실패 시나리오
+POST localhost:8080/orders
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 999999
+    }
+  ]
+}
+
+### 주문 성공 시나리오
+POST localhost:8080/orders
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 20
+    }
+  ]
+}
+
+### 인기 상품 조회 시나리오
+GET localhost:8080/products/popular

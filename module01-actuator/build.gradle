@@ -22,6 +22,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    /* Actuator 의존성
+    *   액츄에이터는 어플리케이션 전반에 대한 운영 EndPoint 를 제공해준다.
+    *   ex) CPU, JVM, Thread, ConnectionPool 등등
+    *   Micrometer 라는 메트릭도 제공을 해주며, MeterRegistry 에 커스텀 메트릭도
+    *   등록할 수 있게 된다.
+    * */
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
