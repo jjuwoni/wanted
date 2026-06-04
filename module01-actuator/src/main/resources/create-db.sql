@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS popular_shop;
+CREATE USER IF NOT EXISTS 'wanted'@'%' IDENTIFIED BY 'wanted';
+GRANT ALL PRIVILEGES ON popular_shop.* TO 'wanted'@'%';
+FLUSH PRIVILEGES;
