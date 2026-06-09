@@ -26,4 +26,6 @@ management:
     web:
       exposure:
         # shop 은 custom endpoint 이다.
-        include: health, info, metrics, shop
+        # prometheus 는 build.gradle 에 추가한 프로메테우스 구현체 결과를
+        # 확인할 수 있는 endpoint 이다.
+        include: health, info, metrics, shop, prometheus

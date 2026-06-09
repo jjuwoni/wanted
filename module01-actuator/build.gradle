@@ -31,6 +31,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    /* Prometheus 의존성
+    *   Application 에서 발생하는 Metric 들을 Prometheus 형식에 맞게 변환해주는 구현체.
+    *   Prometheus 는 어플리케이션에서 발생한 Metric 을 수집하는 데이터베이스 라고 생각하면 된다.
+    * */
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
