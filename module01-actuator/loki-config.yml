@@ -1,0 +1,140 @@
+# 인증 비활성화 설정. 실습용이므로 멀티테넌시(Multi-tenancy) 기능 미사용. 프로덕션에서는 true로 변경 필요
+auth_enabled: false
+
+# Loki 서버의 네트워크 포트 설정 섹션
+server:
+  # HTTP 클라이언트(Grafana, curl 등)가 접근할 포트 번호. 기본값은 3100
+  http_listen_port: 3100
+  # gRPC 클라이언트(Promtail, 다른 Loki 인스턴스 등)가 사용할 포트 번호. 기본값은 9095
+  grpc_listen_port: 9095
+
+# loki 로그 설정
+ingester:
+  # 특정 로그 스트림(동일한 라벨 조합)에 새로운 로그가 들어오지 않는 시간을 측정한다.
+  # (마지막 로그 수신 후 5분 동안 새로운 로그가 없으면 해당 스트림의 청크를 플러시)
+  chunk_idle_period: 1m       # 유휴 상태 설정 (실습을 위해 1분)
+  # 데이터 손실 방지 설정
+  # 로그가 계속 들어오더라도 데이터의 손실을 방지하기 위해 일정 시간마다 청크를 강제로 플러시
+  max_chunk_age: 10m          # 청크 최대 수명
+  # 청크 용량 설정
+  # 시간이 되지 않았더라도 로그가 많이 쌓여 압축 후 크기가 1mb 가 넘으면 강제로 플러시
+  # 파일 크기를 균일하게 유지 하여 디스크 I/O 성능 최적화
+  chunk_target_size: 1048576  # 목표 청크 크기 (약 1MB)
+
+  # 압축 단위
+  # 하나의 청크 내부에서 데이터를 압축하는 최소 단위 설정
+  # 로키는 청크를 한꺼번에 압축하지 않고 작은 블록 단위로 나누어 압축하기 때문
+  chunk_block_size: 262144   # 청크 블록 크기 (약 256KB)
+
+  # 검사 주기
+  # 플러시할 청크가 있는지 확인하는 간격
+  # 30초 마다 플러시할 청크가 있는지 검사 (max_chunk_age, chunk_target_size, period 등)
+  flush_check_period: 30s
+  # 작업 제한 시간
+  # 메모리의 데이터를 저장소로 쓰는 쓰기 작업의 타임아웃 설정
+  # 데이터를 저장소로 밀어내기 시작했는데 10초 동안 완료되지 않으면 실패로 간주.
+  flush_op_timeout: 10s
+
+
+# Loki 전체 설정
+common:
+  # Loki 인스턴스의 고유 주소 설정
+  # 로키는 분산 시스템이므로 여러 인스턴스가 해시 링(Hash Ring)에 등록되어 데이터 분산 저장
+  # instance_addr은 각 로키 인스턴스가 자신의 신원을 해시 링에 등록할 때 사용하는 고유 주소
+  # 단일 인스턴스: 127.0.0.1 사용 (localhost)
+  # 멀티 인스턴스: 각 인스턴스마다 고유한 IP 또는 호스트명 지정 필요
+  instance_addr: 127.0.0.1
+
+  # 모든 상대 경로의 기준이 되는 루트 디렉토리
+  # chunks_directory, rules_directory, active_index_directory 등의 상대 경로가 이 경로를 기준으로 구성됨
+  # [교수자용 - Stage 3 Loki 로컬 exe 실행]
+  # Windows exe를 직접 실행하므로 프로젝트 내부 경로를 사용한다.
+  # Loki 실행 위치가 달라져도 데이터 저장 위치가 명확하도록 절대 경로를 지정한다.
+  path_prefix: ./loki-data
+
+  # 임시 데이터 저장소 위치 설정 섹션
+  storage:
+    # 파일시스템 기반 저장소 사용
+    filesystem:
+      # Loki가 로그 청크(chunks)를 저장할 디렉토리
+      # 청크란 일정 시간 동안 수집된 로그 데이터를 압축하여 저장한 단위
+      # path_prefix를 기준으로 상대/절대 경로 가능. 현재는 loki-data/chunks 경로에 저장
+      chunks_directory: ./loki-data/chunks
+      # Loki 경고(Alert) 규칙을 저장할 디렉토리
+      # Grafana에서 정의한 알림 규칙이 이 디렉토리에 YAML 형식으로 저장됨
+      # 현재는 loki-data/rules 경로에 저장
+      rules_directory: ./loki-data/rules
+
+  # 데이터 복제 계수. 즉, 똑같은 데이터를 몇 군데 저장할지 설정
+  # 값이 1이면 복제 없이 단일 인스턴스에만 저장 (단일 인스턴스 환경에서 필수값)
+  # 값이 3이면 3개의 서로 다른 인스턴스에 동일한 데이터가 저장되어 고가용성 제공
+  replication_factor: 1
+  # Loki 인스턴스들이 서로 통신할 때 사용하는 해시 링(Hash Ring) 설정
+  ring:
+    # 해시 링의 상태 정보를 저장할 키-값 저장소 설정
+    kvstore:
+      # 저장소 타입: inmemory는 메모리 기반 저장으로 인스턴스 재시작 시 초기화됨
+      # 여러 Loki 인스턴스를 운영한다면 consul, etcd, dynamodb 등 외부 저장소로 변경한다.
+      store: inmemory
+
+
+# 실제 로그 데이터와 인덱스를 저장하는 저장소 설정 섹션
+
+# 로키는 기본적으로 여러 서버를 운영하는 멀티테넌시(Multi-tenancy) 환경을 지원
+# 이를 통해 각 서버에서 독립적으로 로그를 수집, 저장, 쿼리를 실행할 수 있음
+# 최종 데이터는 s3, gcs, azure, filesystem 등 다양한 스토리지에 저장하고 요청시 불러옴\
+storage_config:
+  # TSDB(Time Series Database) Shipper 설정
+  # 로그를 시계열 데이터로 저장하고, 쿼리 성능 최적화
+  tsdb_shipper:
+
+    # 임시 관리 인덱스 디렉토리
+    active_index_directory: ./loki-data/index
+
+    # 인덱스 데이터를 캐싱하기 위한 디렉토리 설정
+    # 단일 로컬 실습에서도 반복 조회 시 인덱스 접근 비용을 줄이는 데 사용된다.
+    cache_location: ./loki-data/index-cache
+
+
+# 로그 데이터를 어떤 방식과 형식으로 저장할지 정의하는 섹션
+schema_config:
+  # 여러 스키마 설정을 리스트로 관리. 시간에 따라 다른 스키마 적용 가능
+  # 스키마란? 로그 데이터를 저장하는 구조와 형식을 정의
+  configs:
+    # 첫 번째 스키마 설정
+    - from: 2026-06-09 # 이 스키마를 적용할 시작 날짜. 이 날짜 이후의 로그에 해당 스키마 적용
+      # 로그를 저장할 데이터베이스 유형
+      # tsdb: 시계열 데이터베이스 형식 (로그를 메트릭 기반으로 저장, 빠른 쿼리)
+      # boltdb-shipper(구버전), loki(구버전) 등 다른 옵션도 있음
+      store: tsdb
+      # 실제 로그 데이터(청크)를 저장할 객체 저장소
+      # filesystem: 로컬 또는 마운트된 파일시스템 (chunks_directory에 저장)
+      # s3, gcs, azure 등 클라우드 객체 저장소도 가능
+      object_store: filesystem
+
+      # 로그 스키마 버전 지정
+      # v13: 현재 최신 버전. 로그의 라벨(label)과 메타데이터 구조 정의
+      schema: v13 # v13 Tsdb 형식을 지원하는 방식으로 Tsdb의 성능을 100% 활용
+      # 인덱스 관련 설정
+      index:
+        # 인덱스 파일의 이름 접두사
+        # 실제 파일명은 "index_<period에 따른 시간>.db" 형식이 됨
+        # 예: index_2023-10-24.db, index_2023-10-25.db 등
+        prefix: index_
+        # 새로운 인덱스 파일을 생성할 시간 주기
+        # 24h: 매일 자정마다 새로운 인덱스 파일 생성
+        # 이렇게 분할하면 불필요한 오래된 인덱스를 쉽게 제거 가능
+        period: 24h
+
+
+# Loki의 리소스 사용량 제한 및 데이터 보존 정책 설정 섹션
+limits_config:
+  # 오래된 로그 샘플 거부 여부
+  # true: reject_old_samples_max_age 이상 된 오래된 로그 거부 (저장 공간 절약)
+  # false: 오래된 로그도 모두 수용
+  reject_old_samples: true
+
+  # 거부할 로그의 최대 나이 설정
+  # 168h = 7일. 즉, 현재 시간으로부터 7일 이상 된 로그는 거부
+  # 이 설정으로 미래 또는 매우 오래된 로그 유입을 방지하여 저장 공간 효율화
+  reject_old_samples_max_age: 168h

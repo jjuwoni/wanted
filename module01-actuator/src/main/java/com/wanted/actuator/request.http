@@ -1,5 +1,129 @@
-### 주문 실패 시나리오
-POST localhost:8080/orders
+### Popular Shop API - Stage 1 Metric 실습 요청 모음
+### 사용 방법
+### 1. 애플리케이션을 실행한다.
+###    .\gradlew.bat bootRun
+### 2. 아래 요청을 위에서부터 순서대로 실행한다.
+### 3. 같은 메트릭을 "호출 전"과 "호출 후"에 비교한다.
+###
+### 교수자용 포인트
+### - Metric은 한 번 조회한다고 값이 만들어지는 것이 아니다.
+### - 관련 API를 실제로 호출해야 Counter, Timer, DistributionSummary 값이 기록된다.
+### - /actuator/metrics/{name} 응답의 measurements에서 count, total, max 값을 확인한다.
+
+@host = http://localhost:8080
+
+
+### 0. Actuator 엔드포인트 목록 확인
+GET {{host}}/actuator
+
+
+### 1. 애플리케이션 상태 확인
+### DB 연결 상태도 함께 확인할 수 있다.
+GET {{host}}/actuator/health
+
+
+### 2. 현재 수업 Stage 정보 확인
+GET {{host}}/actuator/info
+
+
+### 3. 현재 노출된 메트릭 이름 목록 확인
+GET {{host}}/actuator/metrics
+
+
+### 4. 주문 생성 전 - 주문 성공 Counter 확인
+### 처음 실행 직후라면 아직 shop.orders.created가 없거나 count가 0에 가깝다.
+GET {{host}}/actuator/metrics/shop.orders.created
+
+
+### 5. 주문 생성 전 - 주문 처리 Timer 확인
+GET {{host}}/actuator/metrics/shop.orders.creation.duration
+
+
+### 6. 주문 생성 전 - 결제 Timer 확인
+GET {{host}}/actuator/metrics/shop.payment.duration
+
+
+### 7. 주문 생성
+### 예상 변화:
+### - shop.orders.created count +1
+### - shop.orders.item.count count +1, max가 주문 상품 종류 수 이상으로 변경
+### - shop.orders.amount count +1, max가 주문 금액 이상으로 변경
+### - shop.orders.creation.duration count +1
+### - shop.payment.duration count +1
+POST {{host}}/orders
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2
+    },
+    {
+      "productId": 3,
+      "quantity": 1
+    }
+  ]
+}
+
+
+### 8. 주문 생성 후 - 주문 성공 Counter 확인
+GET {{host}}/actuator/metrics/shop.orders.created
+
+
+### 9. 주문 생성 후 - 주문 상품 종류 분포 확인
+### 위 주문은 상품 종류가 2개이므로 max가 2 이상이어야 한다.
+GET {{host}}/actuator/metrics/shop.orders.item.count
+
+
+### 10. 주문 생성 후 - 주문 금액 분포 확인
+### 위 주문 금액은 MacBook Pro 2개 + AirPods Pro 1개다.
+GET {{host}}/actuator/metrics/shop.orders.amount
+
+
+### 11. 주문 생성 후 - 주문 생성 전체 시간 확인
+### 결제 대기 500ms가 포함되어 totalTime, max가 증가한다.
+GET {{host}}/actuator/metrics/shop.orders.creation.duration
+
+
+### 12. 주문 생성 후 - 결제 시간 확인
+### PaymentService.pay()의 Thread.sleep(500)이 반영된다.
+GET {{host}}/actuator/metrics/shop.payment.duration
+
+
+### 13. 인기 상품 조회 전 - 인기 상품 요청 Counter 확인
+GET {{host}}/actuator/metrics/shop.products.popular.requests
+
+
+### 14. 인기 상품 조회 전 - 인기 상품 쿼리 Timer 확인
+GET {{host}}/actuator/metrics/shop.products.popular.query.duration
+
+
+### 15. 인기 상품 조회
+### 예상 변화:
+### - shop.products.popular.requests count +1
+### - shop.products.popular.query.duration count +1
+GET {{host}}/products/popular
+
+
+### 16. 인기 상품 조회 후 - 요청 Counter 확인
+GET {{host}}/actuator/metrics/shop.products.popular.requests
+
+
+### 17. 인기 상품 조회 후 - 집계 쿼리 Timer 확인
+GET {{host}}/actuator/metrics/shop.products.popular.query.duration
+
+
+### 18. 재고 부족 주문 생성
+### 예상 응답:
+### - 400 Bad Request
+###
+### 예상 변화:
+### - shop.orders.failed count +1
+### - shop.orders.failed{reason=insufficient_stock} count +1
+### - shop.api.errors count +1
+### - shop.api.errors{reason=bad_request} count +1
+POST {{host}}/orders
 Content-Type: application/json
 
 {
@@ -11,18 +135,68 @@ Content-Type: application/json
   ]
 }
 
-### 주문 성공 시나리오
-POST localhost:8080/orders
+
+### 19. 주문 실패 전체 Counter 확인
+GET {{host}}/actuator/metrics/shop.orders.failed
+
+
+### 20. 주문 실패 reason 태그 필터 확인
+GET {{host}}/actuator/metrics/shop.orders.failed?tag=reason:insufficient_stock
+
+
+### 21. API 오류 전체 Counter 확인
+GET {{host}}/actuator/metrics/shop.api.errors
+
+
+### 22. API 오류 reason 태그 필터 확인
+### 재고 부족은 HTTP 관점에서는 bad_request로 집계된다.
+GET {{host}}/actuator/metrics/shop.api.errors?tag=reason:bad_request
+
+
+### 23. Validation 실패 요청
+### 예상 응답:
+### - 400 Bad Request
+###
+### 예상 변화:
+### - shop.api.errors{reason=validation} count +1
+### - 주문 생성 로직까지 들어가지 않으므로 shop.orders.failed는 증가하지 않는다.
+POST {{host}}/orders
 Content-Type: application/json
 
 {
   "items": [
     {
       "productId": 1,
-      "quantity": 20
+      "quantity": 0
     }
   ]
 }
 
-### 인기 상품 조회 시나리오
-GET localhost:8080/products/popular
+
+### 24. Validation 실패 후 - API 오류 validation 태그 확인
+GET {{host}}/actuator/metrics/shop.api.errors?tag=reason:validation
+
+
+### 25. 커스텀 Actuator Endpoint 확인
+### 이 값은 Metric처럼 누적된 시계열이 아니라 호출 시점의 현재 상태다.
+### 호출할 때마다 count 쿼리가 실행된다.
+GET {{host}}/actuator/shop
+
+
+### 26. 기본 HTTP 요청 메트릭 확인
+### Spring Boot Actuator가 자동으로 제공한다.
+### 커스텀 shop.* 메트릭과 달리 모든 HTTP 요청의 상태, URI, method 등을 집계한다.
+GET {{host}}/actuator/metrics/http.server.requests
+
+
+### 27. HTTP 요청 메트릭 태그 필터 예시
+GET {{host}}/actuator/metrics/http.server.requests?tag=uri:/orders
+
+
+### 28. DB 커넥션 풀 메트릭 확인
+### DB 연결이 만들어진 뒤 확인할 수 있다.
+GET {{host}}/actuator/metrics/hikaricp.connections.active
+
+
+### 29. JVM 메모리 메트릭 확인
+GET {{host}}/actuator/metrics/jvm.memory.used

@@ -1,0 +1,106 @@
+# Promtail 설정 파일
+# 역할: 로그를 수집하여 Loki로 전송하는 에이전트
+# - Windows 로컬 로그 파일 수집
+# - 수집한 로그를 Loki HTTP API를 통해 전송
+# - 재시작 시 중복 로그 방지를 위해 읽은 위치 기록
+
+# Promtail 서버 설정 섹션
+# Promtail이 수신할 HTTP/gRPC 요청에 대한 포트 설정
+server:
+  # Promtail이 수신할 HTTP 포트 번호
+  # 외부에서 Promtail의 상태 확인(/metrics 엔드포인트) 또는 로그 전송 시 사용
+  # loki-config.yaml의 server.http_listen_port: 3100과 구분되어야 함 (같은 포트 불가)
+  http_listen_port: 9080
+
+  # gRPC 포트 설정
+  # 0으로 설정하면 gRPC 서버 비활성화 (단순 로그 수집 용도에서는 불필요)
+  grpc_listen_port: 0
+
+# 읽은 로그의 오프셋(위치) 저장 설정 섹션
+# Promtail은 읽은 파일의 마지막 위치를 저장하여 재시작 시 중복 수집 방지
+positions:
+  # 읽은 로그 위치 정보를 저장할 파일 경로
+  # Windows exe를 직접 실행하므로 프로젝트 내부 경로를 사용한다.
+  # 이 파일은 Promtail 재시작 시 이미 읽은 로그 위치를 기억하기 위해 필요하다.
+  # 형식: YAML 파일로 각 로그 파일의 읽은 위치(바이트 offset)를 기록
+  filename: ./promtail-data/positions.yml
+
+# Loki 서버 연결 설정 섹션
+# 수집한 로그를 어디로 전송할지 정의
+clients:
+  # 첫 번째 Loki 서버 연결 설정
+  - url: http://127.0.0.1:3100/loki/api/v1/push
+    # 설명:
+    # - 127.0.0.1: Windows에서 loki-windows-amd64.exe를 직접 실행하는 로컬 루프백 주소
+    # - 일부 Windows/DNS 환경에서는 Promtail이 localhost를 외부 DNS로 조회해 실패할 수 있으므로 IP를 직접 사용한다.
+    # - 3100: loki-config.yaml의 server.http_listen_port 값과 동일
+    # - /loki/api/v1/push: Loki가 로그를 수신하는 엔드포인트
+    # 형식: HTTP POST로 로그 데이터(protobuf 형식)를 전송
+
+    # 배치 전송 설정 (옵션)
+    # batch_size: 1024 # 몇 개의 로그 라인을 모아서 한 번에 전송할지 설정
+    # batch_timeout: 1s # 배치 전송 대기 시간. 초과하면 즉시 전송
+
+    # 재시도 설정 (옵션)
+    # backoff_config:
+    #   min_period: 500ms # 첫 재시도 대기 시간
+    #   max_period: 5m # 최대 대기 시간
+    #   max_retries: 10 # 최대 재시도 횟수
+
+# 로그 수집 설정 섹션
+# scrape_configs는 Promtail이 "어디서", "어떤 로그를" "어떤 이름으로" 수집할 것인가 설정하는 것이다.
+scrape_configs:
+  # 첫 번째 잡(job) 설정
+  # job : 수집 작업의 그룹 이름(예: spring-logs, api-logs 등)
+  # Targets : 수집할 대상 서버(보통 Promtail 자신인 localhost를 사용하게 된다.)
+  # Labels : Loki에 저장될 때 검색의 기준이 되는 "인덱스" 라벨 설정 (예 : job="spring-logs")
+  # __path__ : 실제 로그 파일이 있는 Windows 로컬 경로 설정
+
+  - job_name: spring-logs # 작업의 이름 (작업 구분용)
+
+    # static_configs는 고정된 타겟 설정
+    # 주로 파일 경로, 호스트명 등을 지정
+    # 즉, 변하지 않는 로그 소스를 정의
+    static_configs:
+      # 수집할 대상
+      - targets:
+          - localhost # 수집 대상 호스트 (보통 Promtail 자신의 경로를 지정)
+        # 수집된 로그의 라벨 설정
+        labels:
+          job: "popular-shop" # Grafana Explore에서 {job="popular-shop"}로 조회하기 위한 라벨
+          app: "module01-actuator" # 애플리케이션 이름 라벨
+          env: "local" # 환경 구분용 라벨
+          # Windows 로컬 Spring Boot 로그 파일 경로.
+          # logback-spring.xml이 ./logs/popular-shop.log에 로그를 남기므로 logs/*.log를 수집한다.
+          __path__: ./logs/*.log
+    # 라벨 예시 : {job="popular-shop", app="module01-actuator", env="local"}
+
+    # relabels_configs는 "라벨을 재가공하는 경우" 추가한다.
+    # 이는 기존 라벨을 변경하거나 새로운 라벨을 추가하는 데 사용되며
+    # 로그 본문을 읽기 전에 적용되며 Loki에 전송되는 라벨에 영향을 미친다.
+    relabel_configs:
+      - source_labels: ['__path__'] # 재가공할 라벨 지정 (__path__=로그 파일 경로) <- 다음 경로는 static_configs의 __path__ 값임
+        regex: '.*test.*' # 읽어온 __path__ 라벨의 값이 'test' 문자열을 포함하는지 매칭
+        action: drop # 해당 조건에 매칭되면 이 로그 파일은 수집하지 않음
+    # 설명: __path__ 라벨에 'test' 문자열이 포함된 로그 파일은 수집하지 않음
+
+    # pipeline_stages: 로그 본문의 내용을 "가공하는 경우" 추가한다.
+    # 이는 log의 level, timestamp 등을 추출하거나 변환하는 데 사용된다.
+    pipeline_stages:
+      # 로그의 본문을 정규표현식으로 분석하기 위한 설정.
+      - regex:
+          # 대괄호 [ ]로 둘러싸인 문자열을 찾고, 그 안의 내용을 level이라는 이름의 그룹으로 캡처
+          expression: '\[(?P<level>(INFO|WARN|ERROR|DEBUG|TRACE))\]'
+        # labels: 위에서 추출한 값을 Loki 라벨로 추가
+      - labels:
+          # 추출한 level 값을 Loki 라벨로 추가
+          level:
+      # 라벨 예시 : {job="popular-shop", app="module01-actuator", env="local", level="INFO"}
+
+      - regex:
+          # 대괄호 [ ]로 둘러싸인 문자열을 찾고, 그 안의 내용을 service_name이라는 이름의 그룹으로 캡처
+          expression: '\]\[(?P<service_name>[a-zA-Z0-9\-_]+)\]'
+      - labels:
+          service_name:
+
+# 최종 라벨 예시 : {job="popular-shop", app="module01-actuator", env="local", level="INFO", service_name="module01-actuator"}

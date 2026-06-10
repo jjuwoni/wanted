@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.zaxxer.hikari.util.ClockSource.elapsedMillis;
+
 @Service
 public class OrderService {
 
@@ -46,9 +48,11 @@ public class OrderService {
     public OrderResponse createOrder(CreateOrderRequest request) {
 
         // 타이머 동작 시작
-        Timer.Sample sample = shopMetrics.startTimer();
+        Timer.Sample sample = shopMetrics.startTimer(); // metric 용
+        long startedAt = System.nanoTime(); // log 용
 
         try{
+            log.info("event=order_create_started itemTypes={}", request.items().size());
             Order order = new Order();
             long orderAmount = 0;
 
@@ -64,11 +68,23 @@ public class OrderService {
             Order savedOrder = orderRepository.save(order);
             // 주문 성공 시 기록 할 Metric
             shopMetrics.recordCreatedOrder(savedOrder.getItems().size(), orderAmount);
-            log.info("주문이 생성되었습니다. orderId={}", savedOrder.getId());
+            log.info(
+                    "event=order_create_succeeded orderId={} itemTypes={} amount={} durationMs={}",
+                    savedOrder.getId(),
+                    savedOrder.getItems().size(),
+                    orderAmount,
+                    elapsedMillis(startedAt)
+            );
             return OrderResponse.from(savedOrder);
         } catch(RuntimeException exception) {
             // 주문 실패 시 생성할 Metric
             shopMetrics.recordFailedOrder(exception);
+            log.warn(
+                    "event=order_create_failed exceptionType={} message=\"{}\" durationMs={}",
+                    exception.getClass().getSimpleName(),
+                    exception.getMessage(),
+                    elapsedMillis(startedAt)
+            );
             throw exception;
         } finally {
             // 위에서 진행 된 타이머를 종료
@@ -86,5 +102,9 @@ public class OrderService {
     private Product findProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+    }
+
+    private long elapsedMillis(long startedAt) {
+        return (System.nanoTime() - startedAt) / 1_000_000;
     }
 }

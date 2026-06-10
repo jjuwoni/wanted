@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- ========================================================= -->
+    <!-- Spring Application Name 주입 -->
+    <!-- spring.application.name 값을 로그에 사용 -->
+    <!-- logback-spring.xml 에서만 동작 -->
+    <!-- ========================================================= -->
+    <springProperty name="APP_NAME" source="spring.application.name"/>
+
+    <!-- ========================================================= -->
+    <!-- 로그 파일 경로 -->
+    <!-- ========================================================= -->
+    <property name="LOG_PATH" value="./logs"/>
+
+    <!-- ========================================================= -->
+    <!-- 공통 로그 패턴 -->
+    <!-- Promtail regex 추출과 요청 단위 traceId 검색을 고려한 구조 -->
+    <!-- [LEVEL][SERVICE_NAME] 형태 보장 -->
+    <!-- ========================================================= -->
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss} [%level][${APP_NAME}] [%thread] traceId=%X{traceId} %logger{36} - %msg%n"/>
+
+    <!-- ========================================================= -->
+    <!-- Console Appender -->
+    <!-- ========================================================= -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ========================================================= -->
+    <!-- Rolling File Appender -->
+    <!-- ========================================================= -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 현재 작성하는 로그 파일 위치 -->
+        <file>${LOG_PATH}/popular-shop.log</file>
+
+        <!-- 날짜가 바뀌는 날 기존 popular-shop.log를 일자별로 백업 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 보관될 log의 이름 패턴 -->
+            <fileNamePattern>${LOG_PATH}/popular-shop.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 최대 보관 일수 -->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <!-- 로그 인코더 설정 -->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ========================================================= -->
+    <!-- Root Logger -->
+    <!-- ========================================================= -->
+    <root>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

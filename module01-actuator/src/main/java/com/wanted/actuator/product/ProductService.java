@@ -5,6 +5,9 @@ import com.wanted.actuator.product.dto.CreateProductRequest;
 import com.wanted.actuator.product.dto.PopularProductResponse;
 import com.wanted.actuator.product.dto.ProductResponse;
 import io.micrometer.core.instrument.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.zaxxer.hikari.util.ClockSource.elapsedMillis;
+
 @Service
 public class ProductService {
+
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     private final ProductRepository productRepository;
     private final ShopMetrics shopMetrics;
@@ -52,11 +59,20 @@ public class ProductService {
 
         // 지연 시간을 확인하는 Metric
         Timer.Sample sample = shopMetrics.startTimer();
-
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
 
+        long startedAt = System.nanoTime();
+
         try {
-            return productRepository.findPopularProducts(sevenDaysAgo, PageRequest.of(0, 5));
+            List<PopularProductResponse> popularProductResponses = productRepository.findPopularProducts(sevenDaysAgo, PageRequest.of(0, 5));
+
+            log.info(
+                    "event=popular_products_queried resultCount={} durationMs={}",
+                    popularProductResponses.size(),
+                    elapsedMillis(startedAt)
+            );
+
+            return popularProductResponses;
         } finally {
             // 지연 시간을 확인하는 Metric
             shopMetrics.stopPopularProductQueryTimer(sample);
@@ -66,5 +82,9 @@ public class ProductService {
     private Product findProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+    }
+
+    private long elapsedMillis(long startedAt) {
+        return (System.nanoTime() - startedAt) / 1_000_000;
     }
 }
