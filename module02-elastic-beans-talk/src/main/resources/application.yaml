@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: module02-elastic-beans-talk

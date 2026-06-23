@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: module01-docker
+  datasource:
+    # 환경변수 치환 문법
+    # DB_HOST 값이 존재하면 DB_HOST 값으로 대체
+    # 없으면 localhost 그대로 사용
+    # 삼항연산자 생각하면 된다. 조건식 1항 : 2항
+    # 조건식이 참이면 1항 을 반환, 거짓이면 2항을 반환
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/menudb
+    username: wanted
+    password: wanted
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

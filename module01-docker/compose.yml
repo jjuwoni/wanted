@@ -1,0 +1,46 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 5159
+      MYSQL_DATABASE: menudb
+      MYSQL_USER: wanted
+      MYSQL_PASSWORD: wanted
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    networks:
+      - wanted-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p1234" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      # Docker build 디렉토리 설정
+      context: . # root에서 스캔하면 Dockerfile을 찾아서 스캔. 찾으면 image 만들 준비 완료
+    image: test-docker:1.0 # 찾은 Dockerfile의 이미지 이름을 이거로 하겠다.
+    container_name: test-docker-app # 그리고서 그걸 container에 올리겠다. 그 container 이름은 이거다.
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: menudb
+      DB_USERNAME: wanted
+      DB_PASSWORD: wanted
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - wanted-network
+
+volumes:
+  mysql-volume:
+
+networks:
+  wanted-network:
