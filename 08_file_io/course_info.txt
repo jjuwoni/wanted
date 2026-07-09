@@ -1,0 +1,12 @@
+AI 활용 Spring Backend 개발자 과정
+
+이 과정은 Spring Backend 개발자가 FastAPI 기반 AI 서버를 연동하는 방법을 학습합니다.
+
+주요 학습 내용:
+- Python 기초
+- FastAPI
+- Hugging Face
+- LangChain
+- Chroma RAG
+- Tool Calling
+- Spring 연동
