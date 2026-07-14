@@ -1,0 +1,12 @@
+# Day 1: Embedding + Vector DB 실습 의존성
+# 설치: pip install -r requirements.txt
+# (Python 3.10 이상 권장)
+
+sentence-transformers>=3.0   # HuggingFace 문장 임베딩 모델 로더 (01, 02, 03, 04)
+chromadb>=0.5                # 로컬 Vector DB (02, 03, 04)
+pypdf>=4.0                   # PDF 텍스트 추출 (03)
+fastapi>=0.110               # AI 기능 API 서버 (04)
+uvicorn[standard]>=0.29      # FastAPI 실행용 ASGI 서버 (04)
+
+# --- 강사용 (수강생 설치 불필요) ---
+# reportlab>=4.0             # tools/generate_regulation_pdf.py 학사규정 PDF 생성
