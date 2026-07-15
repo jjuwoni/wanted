@@ -1,0 +1,16 @@
+# Day 1: Embedding + Vector DB 실습 의존성
+# 설치: pip install -r requirements.txt
+# (Python 3.10 이상 권장)
+
+sentence-transformers>=3.0   # HuggingFace 문장 임베딩 모델 로더 (01, 02, 03, 04)
+chromadb>=0.5                # 로컬 Vector DB (02, 03, 04)
+pypdf>=4.0                   # PDF 텍스트 추출 (03)
+fastapi>=0.110               # AI 기능 API 서버 (04)
+uvicorn[standard]>=0.29      # FastAPI 실행용 ASGI 서버 (04)
+
+python-dotenv>=1.0             # .env 파일 로드 (01~04)
+google-genai>=1.0              # Gemini 공식 SDK (01, 02)
+langchain>=0.3                 # LangChain 코어 (03, 04)
+langchain-google-genai>=2.0    # LangChain용 Gemini 부품 (03, 04)
+langchain-chroma>=0.2          # LangChain용 ChromaDB 부품 (03, 04)
+langchain-huggingface>=0.1     # LangChain용 HF 임베딩 부품 (03, 04)
