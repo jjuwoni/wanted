@@ -1,0 +1,44 @@
+# =====================================================================
+# LMS Spring 스켈레톤 설정
+# =====================================================================
+spring:
+  datasource:
+    # H2 인메모리: 서버를 켤 때마다 schema.sql + data.sql이 새로 적재된다.
+    # 실습 중 데이터를 마음껏 망가뜨려도 재시작하면 원상복구!
+    url: jdbc:h2:mem:lmsdb;MODE=MySQL   # MODE=MySQL: MySQL 호환 문법 허용
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    # --- MySQL로 전환하려면 위를 지우고 아래 주석 해제 ---
+    # url: jdbc:mysql://localhost:3306/lmsdb?serverTimezone=Asia/Seoul
+    # driver-class-name: com.mysql.cj.jdbc.Driver
+    # username: root
+    # password: your-password
+
+  jpa:
+    hibernate:
+      # none: 테이블 생성은 schema.sql이 담당한다 (엔티티 자동생성 X).
+      # 스키마를 SQL 파일로 관리하면 팀원 전체가 같은 구조를 보장받는다.
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    open-in-view: false
+
+  sql:
+    init:
+      mode: always            # 시작 시 schema.sql → data.sql 순서로 실행
+
+  h2:
+    console:
+      enabled: true           # http://localhost:8080/h2-console 에서 DB 확인 가능
+      path: /h2-console
+
+server:
+  port: 8080
+
+# FastAPI AI 서버 주소 — RestClientConfig에서 사용
+ai:
+  server:
+    base-url: http://localhost:8000

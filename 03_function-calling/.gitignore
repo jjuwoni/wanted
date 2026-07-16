@@ -1,0 +1,8 @@
+# .env 환경 설정 정보, KEY 등을 모아두는 파일이며
+# 반드시 ignore 시켜야 한다.
+.env
+
+# 로컬데이터 캐시
+# 로컬 데이터를 push 하게 되면 다른 사람이 pull 받을 때
+chroma_db/
+__pycache__/
