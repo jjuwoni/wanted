@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- =================================================================
+  logback-spring.xml — Spring 로그 형식 (FastAPI와 '눈으로' 이어지도록)
+
+  핵심은 [rid=%X{requestId:-}] 부분이다.
+    %X{...}  : MDC(Mapped Diagnostic Context)에서 값을 꺼내 찍는다
+    requestId: RequestIdFilter가 요청마다 MDC.put 해주는 그 키
+    :-       : 값이 없으면(요청 밖 로그) 빈칸 대신 '-' 표시
+
+  FastAPI(core/logging.py)의 포맷과 나란히 놓고 보라:
+    Spring : 2026-07-14 10:00:00 INFO  [rid=a1b2c3d4] c.s.lms.ai.AiClientService - ...
+    FastAPI: 2026-07-14 10:00:00 INFO  [rid=a1b2c3d4] app.clients.spring_client - ...
+  → rid 하나로 grep 하면 두 서버의 로그가 시간순으로 꿰어진다.
+================================================================== -->
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [rid=%X{requestId:-}] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- 우리 코드는 조금 더 자세히 (필요시 DEBUG로) -->
+    <logger name="com.smartlearning.lms" level="INFO"/>
+</configuration>

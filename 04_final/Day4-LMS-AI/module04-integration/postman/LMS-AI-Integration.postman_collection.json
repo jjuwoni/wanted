@@ -1,0 +1,343 @@
+{
+  "info": {
+    "name": "LMS AI 통합 (Day 4)",
+    "description": "Spring(:8080) ↔ FastAPI(:8000) 통합 테스트 컬렉션.\n\n실행 전 준비(순서대로): ① MySQL 준비(mysql -u root -p < db/init.sql) ② Spring(./gradlew bootRun) ③ 색인 배치(python -m ingestion.run_ingest) ④ FastAPI(uvicorn app.main:app --port 8000).\n\n폴더 순서(A→E)대로 실행하세요. 각 요청의 Description에 '확인 포인트'가 있습니다.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "spring",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "fastapi",
+      "value": "http://localhost:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "A. 사전 점검",
+      "item": [
+        {
+          "name": "A1. FastAPI 상태 확인",
+          "request": {
+            "method": "GET",
+            "url": "{{fastapi}}/health",
+            "description": "확인 포인트: doc_chunks(13)와 courses(13)가 0이 아니어야 합니다. 0이면 색인 배치 미실행 → python -m ingestion.run_ingest. 응답 헤더의 X-Request-ID도 확인해 두세요 — FastAPI가 직접 발급한 rid입니다."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('색인 데이터 존재', () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b.doc_chunks).to.be.above(0);",
+                  "  pm.expect(b.courses).to.be.above(0);",
+                  "});",
+                  "pm.test('X-Request-ID 헤더 존재', () => pm.expect(pm.response.headers.get('X-Request-ID')).to.exist);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "A2. Spring 학사 API 확인",
+          "request": {
+            "method": "GET",
+            "url": "{{spring}}/api/students/1/courses",
+            "description": "확인 포인트: 김민준(학생 1)의 수강 3건. 필드가 progress_rate처럼 snake_case인지 확인 (계약서 2장). 이 API가 바로 챗봇이 Function Calling으로 역호출하는 그 API입니다."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('snake_case 계약 준수', () => {",
+                  "  const c = pm.response.json().courses[0];",
+                  "  pm.expect(c).to.have.property('progress_rate');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "B. RAG 챗봇 (기능 ①)",
+      "item": [
+        {
+          "name": "B1. [전 구간] 규정 질문 → RAG 경로",
+          "request": {
+            "method": "POST",
+            "url": "{{spring}}/chat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"동영상 강의 출석 인정 기준이 뭐야?\",\n  \"history\": []\n}"
+            },
+            "description": "경로: Postman → Spring → FastAPI → Gemini(+ChromaDB).\n\n확인 포인트:\n1. answer에 '90%'와 '(출처: 학사규정 p.N)'이 포함\n2. used_tools = [\"search_regulation\"]\n3. 응답 헤더 X-Request-ID를 복사해서 Spring/FastAPI 두 콘솔 로그를 grep — 같은 rid로 전 구간이 이어지는지!"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('RAG 도구 사용됨', () => pm.expect(pm.response.json().used_tools).to.include('search_regulation'));",
+                  "pm.test('출처 표기 포함', () => pm.expect(pm.response.json().answer).to.include('출처'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "B2. [전 구간] 내 데이터 질문 → Function Calling 경로",
+          "request": {
+            "method": "POST",
+            "url": "{{spring}}/chat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"이번 주 마감 과제 중에 제출 안 한 거 있어?\",\n  \"history\": []\n}"
+            },
+            "description": "확인 포인트:\n1. used_tools = [\"get_assignments_due\"]\n2. FastAPI 콘솔에 'Spring 역호출 → GET /api/students/1/...' 로그, 이어서 Spring 콘솔에 같은 rid의 수신 로그 — FastAPI→Spring 역호출까지 rid가 전파되는 순간입니다."
+          }
+        },
+        {
+          "name": "B3. [전 구간] 멀티턴 대화 (history)",
+          "request": {
+            "method": "POST",
+            "url": "{{spring}}/chat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"그럼 늦게 내면 어떻게 돼?\",\n  \"history\": [\n    {\"role\": \"user\", \"content\": \"과제 제출 규정 알려줘\"},\n    {\"role\": \"assistant\", \"content\": \"과제는 각 과제별 마감일시까지 LMS 과제 제출함으로 제출해야 합니다.\"}\n  ]\n}"
+            },
+            "description": "확인 포인트: '그럼', '늦게 내면'이 무엇인지 history 덕분에 이해하고 지각 제출 규정(80% 인정, 72시간)을 답하는지. history를 빈 배열로 바꿔 다시 보내 비교해 보세요."
+          }
+        },
+        {
+          "name": "B4. [FastAPI 직접] 도구 없는 일반 질문",
+          "request": {
+            "method": "POST",
+            "url": "{{fastapi}}/chat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"꾸준히 공부하는 팁 하나만 알려줘\",\n  \"student_id\": 1,\n  \"history\": []\n}"
+            },
+            "description": "FastAPI를 직접 호출하는 경우 (개발/디버깅용). 확인 포인트: used_tools = [] — 모델이 도구 없이 답해도 되는 질문을 스스로 구분합니다. 이때는 student_id를 요청에 직접 넣어야 합니다 (Spring을 거치면 서버가 채워줌)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "C. 강의 추천 (기능 ②)",
+      "item": [
+        {
+          "name": "C1. [전 구간] 추천 API",
+          "request": {
+            "method": "POST",
+            "url": "{{spring}}/recommend",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"top_k\": 3\n}"
+            },
+            "description": "경로: Postman → Spring(/recommend) → FastAPI(/courses/recommend) → Spring 역호출(수강이력, MySQL) + ChromaDB + LCEL 체인.\n\n확인 포인트:\n1. based_on = 'Java 프로그래밍 기초(수료) 외 2건' (이력 전체 요약)\n2. 1위는 C004(실전 REST API) 근처 — 두 시드에서 중복 등장 + 입문→중급 레벨업 보너스 (README 5장 점수식 손계산과 대조!)\n3. recommendations에 이미 수강 중인 C001/C003/C007이 없어야 함 (하드 규칙)\n4. 각 항목의 score와 matched_from(근거 이력) 확인 — 설명 가능한 추천\n5. explanation이 matched_from을 근거로 강좌별 한 문장씩 서술"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('수강 중 강좌 제외됨', () => {",
+                  "  const codes = pm.response.json().recommendations.map(r => r.code);",
+                  "  ['C001','C003','C007'].forEach(c => pm.expect(codes).to.not.include(c));",
+                  "});",
+                  "pm.test('v1.2 필드(score, matched_from) 존재', () => {",
+                  "  const r = pm.response.json().recommendations[0];",
+                  "  pm.expect(r).to.have.property('score');",
+                  "  pm.expect(r.matched_from).to.be.an('array').that.is.not.empty;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "C2. [전 구간] 챗봇으로 추천 받기 (도구 조합)",
+          "request": {
+            "method": "POST",
+            "url": "{{spring}}/chat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"다음 학기에 뭐 들으면 좋을까?\",\n  \"history\": []\n}"
+            },
+            "description": "같은 추천 기능을 '챗봇 경로'로. 확인 포인트: used_tools에 recommend_next_courses 포함. C1(전용 API, Gemini가 설명 생성)과 C2(챗봇, 모델이 대화 맥락에서 직접 설명)의 응답 차이를 비교해 보세요 — recommend_service.py 상단 주석의 설계 결정이 이것입니다."
+          }
+        }
+      ]
+    },
+    {
+      "name": "D. 로깅 추적 실습",
+      "item": [
+        {
+          "name": "D1. rid 수동 지정으로 전 구간 추적",
+          "request": {
+            "method": "POST",
+            "url": "{{spring}}/chat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Request-ID",
+                "value": "test-trace-001"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"내 학습 현황 요약해줘\",\n  \"history\": []\n}"
+            },
+            "description": "X-Request-ID를 'test-trace-001'로 직접 지정한 요청.\n\n실습: 두 서버 콘솔에서 test-trace-001을 검색(grep)해 다음 순서가 모두 잡히는지 확인하세요.\n① Spring: AI 서버 호출 → POST /chat\n② FastAPI: POST /chat 수신\n③ FastAPI: Spring 역호출 → GET /api/students/1/summary\n④ Spring: /api/students/1/summary 수신 (RequestIdFilter가 이어받음)\n⑤ FastAPI: 응답 완료 / ⑥ Spring: 응답 수신\n\n이것이 분산 추적의 최소 형태입니다."
+          }
+        }
+      ]
+    },
+    {
+      "name": "E. 예외 연동 확인",
+      "item": [
+        {
+          "name": "E1. [FastAPI 직접] 수강 이력 없는 학생 추천 → 404",
+          "request": {
+            "method": "POST",
+            "url": "{{fastapi}}/courses/recommend",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 3,\n  \"top_k\": 3\n}"
+            },
+            "description": "박지훈(학생 3)은 수강 이력이 없습니다. 확인 포인트: 404 + {\"detail\": \"수강 이력이 없어...\", \"request_id\": \"...\"} — 서비스가 던진 AppException을 전역 핸들러가 계약 형식으로 변환한 결과입니다."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('404 반환', () => pm.response.to.have.status(404));",
+                  "pm.test('계약 v1.1 형식(detail + request_id)', () => {",
+                  "  const b = pm.response.json();",
+                  "  pm.expect(b).to.have.property('detail');",
+                  "  pm.expect(b).to.have.property('request_id');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "E2. 검증 실패(422) — 계약 위반 체험",
+          "request": {
+            "method": "POST",
+            "url": "{{fastapi}}/chat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"\",\n  \"student_id\": 1,\n  \"history\": []\n}"
+            },
+            "description": "question이 빈 문자열(min_length=1 위반). 확인 포인트: 422 + detail에 Pydantic 검증 오류 + request_id. Spring DTO와 필드가 어긋나면 만나게 될 바로 그 에러입니다."
+          }
+        },
+        {
+          "name": "E3. [전 구간] FastAPI 중지 후 챗봇 — 장애 격리",
+          "request": {
+            "method": "POST",
+            "url": "{{spring}}/chat",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"출석 기준 알려줘\",\n  \"history\": []\n}"
+            },
+            "description": "★ FastAPI 서버를 끈 상태에서 실행하세요! ★\n\n확인 포인트: 500이 아니라 200 + '잠시 응답하지 못하고 있어요' 답변 — 챗봇 실패는 '대화'로 수습한다는 AiClientService의 정책입니다. Spring 로그에는 같은 rid로 'AI 서버 연결 실패' ERROR가 남습니다."
+          }
+        },
+        {
+          "name": "E4. [전 구간] FastAPI 중지 후 추천 — 예외 승격",
+          "request": {
+            "method": "POST",
+            "url": "{{spring}}/recommend",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"top_k\": 3\n}"
+            },
+            "description": "★ FastAPI 서버를 끈 상태에서 실행하세요! ★\n\n확인 포인트: E3과 달리 503 + {\"detail\": \"AI 추천 서버에 연결할 수 없습니다.\", \"request_id\": ...}. 같은 장애에 챗봇(E3)과 데이터 API(E4)의 정책이 왜 다른지 — AiClientService 상단 주석의 '에러 정책 이원화'가 이것입니다."
+          }
+        }
+      ]
+    }
+  ]
+}

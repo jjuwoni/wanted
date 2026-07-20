@@ -1,0 +1,25 @@
+# Day 4 통합 프로젝트 의존성
+# 설치: pip install -r requirements.txt
+
+# --- 임베딩 / Vector DB (Day 1~) ---
+sentence-transformers>=3.0
+chromadb>=0.5
+pypdf>=4.0
+
+# --- LangChain 스택 (Day 2~) ---
+langchain>=0.3
+langchain-google-genai>=2.0      # ChatGoogleGenerativeAI
+langchain-chroma>=0.2            # VectorStore 부품
+langchain-huggingface>=0.1       # 임베딩 부품
+langchain-text-splitters>=0.3    # RecursiveCharacterTextSplitter
+
+# --- 서버 / 연동 (Day 3~) ---
+fastapi>=0.110
+uvicorn[standard]>=0.29
+httpx>=0.27                      # Spring 역호출 (온라인 경로)
+python-dotenv>=1.0
+
+# --- Day 4 신규 ---
+pydantic-settings>=2.0           # 타입 검증되는 설정 (core/config.py)
+sqlalchemy>=2.0                  # MySQL 색인 배치 (오프라인 경로)
+pymysql>=1.1                     # SQLAlchemy용 MySQL 드라이버
